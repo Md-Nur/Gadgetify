@@ -1,9 +1,11 @@
-import Image from 'next/image'
+import Carousel from "./Carousel";
+// import Hero from "./Hero";
 
 export default function Home() {
   return (
     <main>
-      <h1>Hello</h1>
+      {/* <Hero /> */}
+      <Carousel />
     </main>
-  )
+  );
 }
