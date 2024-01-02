@@ -1,4 +1,5 @@
-import Carousel from "./Carousel";
+import Carousel from "./components/Carousel";
+import Products from "./components/Products";
 // import Hero from "./Hero";
 
 export default function Home() {
@@ -6,6 +7,7 @@ export default function Home() {
     <main>
       {/* <Hero /> */}
       <Carousel />
+      <Products />
     </main>
   );
 }
