@@ -24,12 +24,21 @@ export const fileToUrl = async (files: any) => {
   let images: string[] = [];
 
   for (const file of files) {
+    const extention = file.name.split(".").pop();
+
+    if (!extention || !["jpg", "jpeg", "png"].includes(extention)) {
+      return false;
+    }
     const byteData = await file.arrayBuffer();
     const buffer = Buffer.from(byteData);
-    const extention = file.name.split(".").pop();
     const path = `./public/images/products/${Date.now()}.${extention}`;
-    await writeFile(path, buffer);
-    images.push(path);
+    try {
+      await writeFile(path, buffer);
+
+      images.push(path);
+    } catch (e) {
+      return false;
+    }
   }
   return images;
 };
@@ -38,6 +47,9 @@ export async function POST(req: NextRequest) {
   const data = await req.formData();
   const files: any = data.getAll("images");
   const images = await fileToUrl(files);
+  if (!images) {
+    return NextResponse.json({ error: "Images are required" }, { status: 400 });
+  }
   const body = {
     name: data.get("name"),
     price: Number(data.get("price")),

@@ -26,6 +26,9 @@ export async function PUT(
   const data = await req.formData();
   const files: any = data.getAll("images");
   const images = await fileToUrl(files);
+  if (!images) {
+    return NextResponse.json({ error: "Images are required" }, { status: 400 });
+  }
   const body = {
     name: data.get("name"),
     price: Number(data.get("price")),
