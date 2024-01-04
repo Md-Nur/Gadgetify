@@ -2,7 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { string, z } from "zod";
 import prisma from "@/prisma/client";
 import { fileToUrl } from "@/app/utils/files";
-export const productSchema = z.object({
+
+export const productSchema: any = z.object({
   name: z.string(),
   price: z.number().min(1),
   description: z.string().max(1000),
