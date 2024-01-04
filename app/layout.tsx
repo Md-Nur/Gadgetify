@@ -23,6 +23,7 @@ export default function RootLayout({
       <body className={inter.className}>
         <Drawer>
           <Navbar />
+          <div className="py-8"></div> {/* This the the buffer space for navbar fixed */}
           {children}
           <Footer />
         </Drawer>

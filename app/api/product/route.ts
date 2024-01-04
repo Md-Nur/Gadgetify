@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { string, z } from "zod";
 import prisma from "@/prisma/client";
-import { writeFile } from "fs/promises";
-
+import { fileToUrl } from "@/app/utils/files";
 export const productSchema = z.object({
   name: z.string(),
   price: z.number().min(1),
@@ -13,41 +12,11 @@ export const productSchema = z.object({
   category: z.string(),
 });
 
-export const fileToUrl = async (files: any) => {
-  if (files.length < 1) {
-    return NextResponse.json(
-      { message: "Please upload at least one image" },
-      { status: 400 }
-    );
-  }
-
-  let images: string[] = [];
-
-  for (const file of files) {
-    const extention = file.name.split(".").pop();
-
-    if (!extention || !["jpg", "jpeg", "png"].includes(extention)) {
-      return false;
-    }
-    const byteData = await file.arrayBuffer();
-    const buffer = Buffer.from(byteData);
-    const path = `./public/images/products/${Date.now()}.${extention}`;
-    try {
-      await writeFile(path, buffer);
-
-      images.push(path);
-    } catch (e) {
-      return false;
-    }
-  }
-  return images;
-};
-
 export async function POST(req: NextRequest) {
   const data = await req.formData();
   const files: any = data.getAll("images");
   const images = await fileToUrl(files);
-  if (!images) {
+  if (!images || images.length < 1) {
     return NextResponse.json({ error: "Images are required" }, { status: 400 });
   }
   const body = {

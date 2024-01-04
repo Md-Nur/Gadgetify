@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { writeFile } from "fs/promises";
 import { productSchema } from "../route";
 import prisma from "@/prisma/client";
-import { fileToUrl } from "../route";
+import { deleteFiles, fileToUrl } from "../../../utils/files";
 
 export async function GET(
   req: NextRequest,
@@ -13,7 +12,7 @@ export async function GET(
   });
 
   if (!product) {
-    return NextResponse.next();
+    return NextResponse.json({ message: "No product is found with this Id!!" });
   }
 
   return NextResponse.json(product);
@@ -25,9 +24,19 @@ export async function PUT(
 ) {
   const data = await req.formData();
   const files: any = data.getAll("images");
-  const images = await fileToUrl(files);
-  if (!images) {
-    return NextResponse.json({ error: "Images are required" }, { status: 400 });
+
+  const prevData = await prisma.product.findUnique({
+    where: {
+      id: parseInt(params.id),
+    },
+  });
+
+  let images: string[] | boolean = prevData?.images!;
+
+  if (files[0] && files) {
+    deleteFiles(images); // deleting the previous files
+    images = await fileToUrl(files);
+    if (!images) images = prevData?.images!;
   }
   const body = {
     name: data.get("name"),
@@ -50,7 +59,7 @@ export async function PUT(
   });
 
   if (!product) {
-    return NextResponse.next();
+    return NextResponse.json({ message: "Product not found" });
   }
 
   return NextResponse.json(product);

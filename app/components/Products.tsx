@@ -34,11 +34,14 @@ const Products = () => {
       <div className="flex flex-wrap justify-around items-center">
         {products.length < 1
           ? [1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((i) => (
-              <div key={i} className="flex flex-col gap-4 h-[500px] w-64 md:w-96 m-5">
-                <div className="skeleton h-32 w-full"></div>
-                <div className="skeleton h-4 w-28"></div>
-                <div className="skeleton h-4 w-full"></div>
-                <div className="skeleton h-4 w-full"></div>
+              <div
+                key={i}
+                className="flex flex-col gap-4 h-[500px] w-64 md:w-96 m-5 shadow"
+              >
+                <div className="skeleton h-72 w-full"></div>
+                <div className="skeleton h-4 w-44 ml-5"></div>
+                <div className="skeleton h-4 w-44 ml-5"></div>
+                <div className="skeleton h-10 w-44 ml-48"></div>
               </div>
             ))
           : products.map((product) => (
@@ -70,14 +73,18 @@ const Products = () => {
                   </Link>
                   <p>
                     Tk. {product.price}{" "}
-                    <del className="text-red-500">
+                    <del className="text--400">
                       {product.price + product.price / 10}
                     </del>
                   </p>
 
                   <div className="card-actions justify-end">
-                    <button className="btn btn-primary">Add to Cart</button>
-                    <button className="btn btn-primary">Buy Now</button>
+                    <Link href="/order-form" className="btn btn-primary">
+                      Add to Cart
+                    </Link>
+                    <Link href="/order-form" className="btn btn-success">
+                      Buy Now
+                    </Link>
                   </div>
                 </div>
               </div>

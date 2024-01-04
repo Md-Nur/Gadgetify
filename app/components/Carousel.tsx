@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import { getFiles } from "../utils/files";
 
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Navigation, Pagination } from "swiper/modules";
@@ -11,13 +12,17 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 
 const Carousel = () => {
-  const [fileNames, setFileNames] = useState(["./public/images/logo.png"]);
+  const [fileNames, setFileNames] = useState([""]);
   useEffect(() => {
-    fetch("./api/files")
-      .then((res) => res.json())
-      .then((data) => setFileNames(data.carousel))
-      .catch((err) => console.log(err));
+    getFiles("./public/images/carousel")
+      .then((data) => setFileNames(data))
+      .catch((e) => console.error(e));
   }, []);
+  if (!fileNames[0]) {
+    return (
+      <div className="skeleton w-screen h-[600px]"></div>
+    );
+  }
   return (
     <Swiper
       modules={[Autoplay, Navigation, Pagination]}
