@@ -64,8 +64,8 @@ const SingleProduct = ({
             loop={true}
             className="max-w-96 md:max-w-[42vw]"
           >
-            {product.images.map((image: string) => (
-              <SwiperSlide className="my-auto">
+            {product.images.map((image: string, index) => (
+              <SwiperSlide className="my-auto" key={index}>
                 <div className="flex w-full h-full items-center justify-center">
                   <Image
                     key={image}
