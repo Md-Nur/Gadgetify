@@ -19,9 +19,7 @@ const Carousel = () => {
       .catch((e) => console.error(e));
   }, []);
   if (!fileNames[0]) {
-    return (
-      <div className="skeleton w-screen h-[600px]"></div>
-    );
+    return <div className="skeleton w-screen h-[600px]"></div>;
   }
   return (
     <Swiper
@@ -36,10 +34,9 @@ const Carousel = () => {
       }}
       loop={true}
     >
-      {fileNames.map((fileName: string) => (
-        <SwiperSlide>
+      {fileNames.map((fileName: string, index) => (
+        <SwiperSlide key={index}>
           <Image
-            key={fileName}
             src={fileName.slice(8)}
             alt={fileName.slice(8)}
             height={600}
