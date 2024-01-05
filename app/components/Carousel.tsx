@@ -21,6 +21,9 @@ const Carousel = () => {
   // if (!fileNames[0]) {
   //   return <div className="skeleton w-screen h-[600px]"></div>;
   // }
+
+  console.log(fileNames);
+
   return (
     <Swiper
       modules={[Autoplay, Navigation, Pagination]}
