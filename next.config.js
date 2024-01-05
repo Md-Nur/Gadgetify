@@ -4,7 +4,7 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "daisyui.com",
+        hostname: process.env.NEXT_PUBLIC_BASE_URL,
       },
     ],
   },

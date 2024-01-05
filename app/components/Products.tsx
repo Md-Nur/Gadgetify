@@ -46,7 +46,7 @@ const Products = () => {
             ))
           : products.map((product) => (
               <div
-                className="card w-64 sm:w-96 h-[500px] m-5 bg-base-100 shadow-xl"
+                className="card w-64 sm:w-96 h-[500px] m-1 md:m-5 bg-base-100 shadow-xl"
                 key={product.id}
               >
                 <figure>
