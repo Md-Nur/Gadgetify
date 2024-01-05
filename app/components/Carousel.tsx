@@ -18,9 +18,9 @@ const Carousel = () => {
       .then((data) => setFileNames(data))
       .catch((e) => console.error(e));
   }, []);
-  if (!fileNames[0]) {
-    return <div className="skeleton w-screen h-[600px]"></div>;
-  }
+  // if (!fileNames[0]) {
+  //   return <div className="skeleton w-screen h-[600px]"></div>;
+  // }
   return (
     <Swiper
       modules={[Autoplay, Navigation, Pagination]}
