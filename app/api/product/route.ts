@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { string, z } from "zod";
 import prisma from "@/prisma/client";
 import { fileToUrl } from "@/app/utils/files";
+import ApiError from "@/app/utils/ApiError";
+import ApiResponse from "@/app/utils/ApiResponse";
 
 export const productSchema: any = z.object({
   name: z.string(),
@@ -18,7 +20,7 @@ export async function POST(req: NextRequest) {
   const files: any = data.getAll("images");
   const images = await fileToUrl(files);
   if (!images || images.length < 1) {
-    return NextResponse.json({ error: "Images are required" }, { status: 400 });
+    throw new ApiError(400, "Images are required");
   }
   const body = {
     name: data.get("name"),
@@ -33,21 +35,25 @@ export async function POST(req: NextRequest) {
   const validatedData = productSchema.safeParse(body);
 
   if (!validatedData.success) {
-    return NextResponse.json(validatedData.error.errors, { status: 400 });
+    throw new ApiError(400, "plase give valid data types", [
+      validatedData.error.errors,
+    ]);
   }
   const product = await prisma.product.create({ data: validatedData.data });
 
   if (!product) {
-    return NextResponse.json(
-      { message: "Something went wrong" },
-      { status: 500 }
+    throw new ApiError(
+      500,
+      "There have some porblem to create this product in database"
     );
   }
 
   // return NextResponse.json(product, { status: 201 });
   return NextResponse.json(
-    { message: "Product created successfully" },
-    { status: 201 }
+    new ApiResponse(201, "", "Product added successfully"),
+    {
+      status: 201,
+    }
   );
 }
 

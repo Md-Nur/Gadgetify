@@ -4,6 +4,7 @@ import "./globals.css";
 import Navbar from "./components/Navbar";
 import Drawer from "./components/Drawer";
 import Footer from "./components/Footer";
+import Toast from "./components/Toast";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -23,7 +24,9 @@ export default function RootLayout({
       <body className={inter.className}>
         <Drawer>
           <Navbar />
-          <div className="py-8"></div> {/* This the the buffer space for navbar fixed */}
+          <div className="py-8"></div>{" "}
+          {/* This the the buffer space for navbar fixed */}
+          <Toast />
           {children}
           <Footer />
         </Drawer>

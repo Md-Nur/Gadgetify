@@ -16,7 +16,7 @@ const FormSubmitButton = ({
   return (
     <button
       {...props}
-      className={`btn btn-outline ${className}`}
+      className={`btn btn-outline rounded ${className}`}
       disabled={pending}
     >
       {pending && <span className="loading loading-infinity loading-md" />}
