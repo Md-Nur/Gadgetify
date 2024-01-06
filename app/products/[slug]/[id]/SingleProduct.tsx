@@ -2,6 +2,8 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import DeleteProduct from "@/app/utils/DeleteProduct";
+import { useRouter } from "next/navigation";
 
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Navigation, Pagination } from "swiper/modules";
@@ -28,6 +30,7 @@ const SingleProduct = ({
   params: { id: string; slug: string };
 }) => {
   const { id, slug } = params;
+  const router = useRouter();
 
   const [product, setProduct] = useState<Product | null>(null);
   const [error, setError] = useState(null);
@@ -100,8 +103,18 @@ const SingleProduct = ({
               Add to cart
             </Link>
             <Link href="/order-form" className="btn btn-success my-3">
-              Buy Now
+              Order Now
             </Link>
+
+            <button
+              onClick={() => {
+                DeleteProduct(product.id);
+                router.push("/");
+              }}
+              className="btn btn-error rounded"
+            >
+              Delete Product
+            </button>
           </div>
           <p className="">
             নোট : পণ্যের ছবি এবং বিবরণীর সাথে মিল থাকা সত্ত্বেও পণ্য গ্রহণ করতে

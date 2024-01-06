@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { productSchema } from "../route";
 import prisma from "@/prisma/client";
 import { deleteFiles, fileToUrl } from "../../../utils/files";
+import ApiError from "@/app/utils/ApiError";
+import ApiResponse from "@/app/utils/ApiResponse";
 
 export async function GET(
   req: NextRequest,
@@ -69,13 +71,25 @@ export async function DELETE(
   req: NextRequest,
   { params }: { params: { id: string } }
 ) {
+  const prevData = await prisma.product.findFirst({
+    where: {
+      id: parseInt(params.id),
+    },
+  });
+
+  let images: string[] | boolean = prevData?.images!;
+
+  deleteFiles(images); // deleting the previous files
+
   const product = await prisma.product.delete({
     where: { id: Number(params.id) },
   });
 
-  if (!product) {
-    return NextResponse.next();
+  if (!product || !prevData) {
+    throw new ApiError(400, "Your product can't be deleted");
   }
 
-  return NextResponse.json(product);
+  return NextResponse.json(
+    new ApiResponse(202, "", "Product deleted successfully")
+  );
 }

@@ -2,7 +2,6 @@
 import { useRouter } from "next/navigation";
 import { ReactNode, FormEvent, useState } from "react";
 import { toast } from "react-toastify";
-import FormSubmitButton from "./FormSubmitButton";
 
 interface Props {
   children: ReactNode;
@@ -31,7 +30,7 @@ const Forms: React.FC<Props> = ({
 
     const formData = new FormData(event.currentTarget);
     const response = await fetch(apiUrl, {
-      method: "POST",
+      method: method,
       body: formData,
     });
 
