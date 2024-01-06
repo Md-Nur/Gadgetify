@@ -1,6 +1,5 @@
 "use client";
-import { useRouter } from "next/navigation";
-import { ReactNode, FormEvent, useState } from "react";
+import { ReactNode, FormEvent, useState, useRef } from "react";
 import { toast } from "react-toastify";
 
 interface Props {
@@ -20,46 +19,25 @@ const Forms: React.FC<Props> = ({
   submitName,
   ...props
 }) => {
-  const router = useRouter();
-
   const [pending, setPending] = useState(false);
+  const ref = useRef<HTMLFormElement>(null);
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     setPending(true);
     event.preventDefault();
-
     const formData = new FormData(event.currentTarget);
-    const response = await fetch(apiUrl, {
-      method: method,
-      body: formData,
-    });
-
-    // Handle response if necessary
-    const data = await response.json();
-    if (data.success) {
-      toast.success(data.message, {
-        position: "bottom-center",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-      });
-      router.push("/");
-    } else {
-      toast.error(data.message, {
-        position: "bottom-center",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-      });
-    }
+    await toast.promise(
+      fetch(apiUrl, {
+        method: method,
+        body: formData,
+      }),
+      {
+        pending: "Processing request",
+        success: "Success👌",
+        error: "There is a problem to processing the request 🤯",
+      }
+    );
+    ref.current?.reset();
     setPending(false);
   }
 
@@ -67,6 +45,7 @@ const Forms: React.FC<Props> = ({
     <section className="flex flex-col items-center justify-center bg-base-200 p-5 md:p-10">
       <h2 className="text-3xl font-bold">{headingName}</h2>
       <form
+        ref={ref}
         className="flex flex-col items-center justify-center  rounded-lg px-5 py-10 md:m-5 w-[80vw] gap-5 bg-base-100"
         method={method}
         onSubmit={onSubmit}

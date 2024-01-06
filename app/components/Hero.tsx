@@ -7,7 +7,7 @@ const Hero = () => {
         <Image
           src={Logo}
           alt="Hero Image"
-          className="max-w-[90vw] md:max-w-[45vw] rounded-lg shadow-2xl"
+          className="max-w-[90vw] md:max-w-[40vw] rounded-lg shadow-2xl"
         />
         <div>
           <h1 className="text-5xl font-bold">Gadgetify</h1>

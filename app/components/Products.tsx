@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import DeleteProduct from "../utils/DeleteProduct";
+import DeleteProductButton from "./DeleteProductButton";
 
 const Products = () => {
   const [products, setProducts]: [
@@ -86,14 +86,8 @@ const Products = () => {
                     <Link href="/order-form" className="btn btn-success">
                       Order Now
                     </Link>
-                    <button
-                      onClick={() => {
-                        DeleteProduct(product.id);
-                      }}
-                      className="btn btn-error rounded"
-                    >
-                      Delete Product
-                    </button>
+                    <DeleteProductButton id={product.id} />
+
                   </div>
                 </div>
               </div>

@@ -2,9 +2,8 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import DeleteProduct from "@/app/utils/DeleteProduct";
-import { useRouter } from "next/navigation";
 
+import DeleteProductButton from "@/app/components/DeleteProductButton";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Navigation, Pagination } from "swiper/modules";
 // Import Swiper styles
@@ -29,8 +28,7 @@ const SingleProduct = ({
 }: {
   params: { id: string; slug: string };
 }) => {
-  const { id, slug } = params;
-  const router = useRouter();
+  const { id } = params;
 
   const [product, setProduct] = useState<Product | null>(null);
   const [error, setError] = useState(null);
@@ -61,10 +59,7 @@ const SingleProduct = ({
             navigation
             spaceBetween={50}
             slidesPerView={1}
-            autoplay={{
-              delay: 5000,
-              disableOnInteraction: false,
-            }}
+            autoplay
             loop={true}
             className="max-w-[84vw] md:max-w-[42vw]"
           >
@@ -96,27 +91,23 @@ const SingleProduct = ({
               </del>
               ৳{product.price}
             </h3>
+            <h4 className="font-bold my-5">
+              <Link href="tel:01982741706" className="text-xl ">
+                01982741706
+              </Link>
+            </h4>
             Delivery Charge: Inside Dhaka : 60 Tk. / Outside Dhaka : 130 Tk.
           </p>
-          <div className="flex items-center space-x-5 w-full">
+          <div className="flex flex-wrap items-center justify-evenly w-full">
             <Link href="/order-form" className="btn btn-primary my-3">
               Add to cart
             </Link>
             <Link href="/order-form" className="btn btn-success my-3">
               Order Now
             </Link>
-
-            <button
-              onClick={() => {
-                DeleteProduct(product.id);
-                router.push("/");
-              }}
-              className="btn btn-error rounded"
-            >
-              Delete Product
-            </button>
+            <DeleteProductButton id={params.id} />
           </div>
-          <p className="">
+          <p className="my-2">
             নোট : পণ্যের ছবি এবং বিবরণীর সাথে মিল থাকা সত্ত্বেও পণ্য গ্রহণ করতে
             না চাইলে ডেলিভারি চার্জ প্রদান করতে হবে।
           </p>
