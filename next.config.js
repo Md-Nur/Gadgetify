@@ -3,8 +3,10 @@ const nextConfig = {
   images: {
     remotePatterns: [
       {
-        protocol: "https",
-        hostname: process.env.NEXT_PUBLIC_BASE_URL,
+        protocol: "http",
+        hostname: "res.cloudinary.com",
+        // port: "",
+        // pathname: "/account123/**",
       },
     ],
   },

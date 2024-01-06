@@ -68,7 +68,11 @@ const SingleProduct = ({
                 <div className="flex w-full h-full items-center justify-center">
                   <Image
                     key={image}
-                    src={image.slice(8)}
+                    src={
+                      image[1] === "/"
+                        ? image.slice(8)
+                        : image
+                    }
                     alt={image.slice(8)}
                     height={500}
                     width={500}

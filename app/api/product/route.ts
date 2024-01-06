@@ -33,9 +33,8 @@ export async function POST(req: NextRequest) {
   };
 
   const validatedData = productSchema.safeParse(body);
-
   if (!validatedData.success) {
-    throw new ApiError(400, "plase give valid data types", [
+    throw new ApiError(400, "Plase give valid data types", [
       validatedData.error.errors,
     ]);
   }

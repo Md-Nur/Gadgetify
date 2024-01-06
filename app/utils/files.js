@@ -1,6 +1,7 @@
 "use server";
 import fs, { unlinkSync } from "fs";
-import { writeFile } from "fs/promises";
+import uploadOnCloudinay from "@/app/utils/cloudinary";
+// import { writeFile } from "fs/promises";
 // const fs = require("fs")
 
 // export const getFiles = async (dir, files = []) => {
@@ -37,11 +38,16 @@ export const fileToUrl = async (files) => {
     }
     const byteData = await file.arrayBuffer();
     const buffer = Buffer.from(byteData);
-    const path = `./public/images/products/${Date.now()}.${extention}`;
+    // const path = `./public/images/products/${Date.now()}.${extention}`;
     try {
-      await writeFile(path, buffer);
+      // await writeFile(path, buffer);
+      let path = await uploadOnCloudinay(buffer);
+      // if (path) {
+      //   console.info(path);
+      // }
       images.push(path);
     } catch (e) {
+      // console.error(e);
       return false;
     }
   }

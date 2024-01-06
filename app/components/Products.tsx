@@ -57,8 +57,12 @@ const Products = () => {
                       .toLowerCase()}/${product.id}`}
                   >
                     <Image
-                      src={product.images[0].slice(8)}
-                      alt={product.images[0].slice(8)}
+                      src={
+                        product.images[0][1] === "/"
+                          ? product.images[0].slice(8)
+                          : product.images[0]
+                      }
+                      alt={product.images[0]}
                       width={500}
                       height={500}
                     />
