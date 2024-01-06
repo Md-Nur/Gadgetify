@@ -3,7 +3,7 @@ import Forms from "@/app/components/Forms";
 import { useEffect, useState } from "react";
 import { Product } from "@/app/products/[slug]/[id]/SingleProduct";
 
-const page = ({ params }: { params: { id: string } }) => {
+const UpdateProduct = ({ params }: { params: { id: string } }) => {
   const Props: any = {
     headingName: "Update Product",
     method: "PUT",
@@ -102,4 +102,4 @@ const page = ({ params }: { params: { id: string } }) => {
   );
 };
 
-export default page;
+export default UpdateProduct;
