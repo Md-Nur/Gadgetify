@@ -37,12 +37,12 @@ const Products = () => {
           ? [1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((i) => (
               <div
                 key={i}
-                className="flex flex-col gap-4 h-[500px] w-64 md:w-96 m-5 shadow"
+                className="flex flex-col gap-4 h-[500px] w-[90vw] max-w-md shadow"
               >
                 <div className="skeleton h-72 w-full"></div>
                 <div className="skeleton h-4 w-44 ml-5"></div>
                 <div className="skeleton h-4 w-44 ml-5"></div>
-                <div className="skeleton h-10 w-44 ml-48"></div>
+                <div className="skeleton h-10 w-44 ml-7 md:ml-48"></div>
               </div>
             ))
           : products.map((product) => (
@@ -87,7 +87,12 @@ const Products = () => {
                       Order Now
                     </Link>
                     <DeleteProductButton id={product.id} />
-
+                    <Link
+                      href={`/admin/update-product/${product.id}`}
+                      className="btn btn-info"
+                    >
+                      Update
+                    </Link>
                   </div>
                 </div>
               </div>

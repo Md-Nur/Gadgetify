@@ -1,6 +1,7 @@
 "use client";
 import { ReactNode, FormEvent, useState, useRef } from "react";
 import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 
 interface Props {
   children: ReactNode;
@@ -21,22 +22,33 @@ const Forms: React.FC<Props> = ({
 }) => {
   const [pending, setPending] = useState(false);
   const ref = useRef<HTMLFormElement>(null);
+  const router = useRouter();
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     setPending(true);
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
-    await toast.promise(
-      fetch(apiUrl, {
-        method: method,
-        body: formData,
-      }),
-      {
-        pending: "Processing request",
-        success: "Success👌",
-        error: "There is a problem to processing the request 🤯",
-      }
-    );
+    if (!formData) {
+      throw Error("There have no form data: " + formData);
+    }
+    await toast
+      .promise(
+        fetch(apiUrl, {
+          method: method,
+          body: formData,
+        }),
+        {
+          pending: "Processing request",
+          success: "Success👌",
+          error: "There is a problem to processing the request 🤯",
+        }
+      )
+    
+    if (method === "PUT") {
+      let url = apiUrl.split("/"); // /api/product/${params.id}
+      router.push(`/products/updated/${url[3]}`);
+    }
+
     ref.current?.reset();
     setPending(false);
   }

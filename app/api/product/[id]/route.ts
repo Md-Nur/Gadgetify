@@ -35,10 +35,11 @@ export async function PUT(
 
   let images: string[] | boolean = prevData?.images!;
 
-  if (files[0] && files) {
+
+  if (files[0] && files && files[0].size > 1) {
     deleteFiles(images); // deleting the previous files
     images = await fileToUrl(files);
-    if (!images) images = prevData?.images!;
+    if (!images) throw new ApiError(404, "Image not found");
   }
   const body = {
     name: data.get("name"),
@@ -61,10 +62,12 @@ export async function PUT(
   });
 
   if (!product) {
-    return NextResponse.json({ message: "Product not found" });
+    throw new ApiError(404, "Product not found");
   }
 
-  return NextResponse.json(product);
+  return NextResponse.json(
+    new ApiResponse(202, "", "Product details update successfully")
+  );
 }
 
 export async function DELETE(

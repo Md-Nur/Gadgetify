@@ -17,7 +17,7 @@ const page = () => {
         required
       />
       <textarea
-        className="textarea textarea-bordered w-full"
+        className="textarea textarea-bordered w-full h-52"
         name="description"
         placeholder="Product Description"
         required

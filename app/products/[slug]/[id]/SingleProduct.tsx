@@ -12,7 +12,7 @@ import "swiper/css/autoplay";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 
-interface Product {
+export interface Product {
   id: number;
   name: string;
   price: number;
@@ -51,7 +51,7 @@ const SingleProduct = ({
 
   return (
     <div className="">
-      <div className="flex flex-wrap justify-evenly items-center bg-base-200 rounded m-3 p-3 md:m-6 md:p-6 lg:m-8 lg:p-8">
+      <div className="flex flex-wrap justify-evenly items-center bg-base-200 rounded m-1 p-1 sm:m-3 sm:p-3 md:m-6 md:p-6 lg:m-8 lg:p-8">
         <div>
           <Swiper
             modules={[Autoplay, Navigation, Pagination]}
@@ -106,6 +106,12 @@ const SingleProduct = ({
               Order Now
             </Link>
             <DeleteProductButton id={params.id} />
+            <Link
+              href={`/admin/update-product/${params.id}`}
+              className="btn btn-info my-3"
+            >
+              Update
+            </Link>
           </div>
           <p className="my-2">
             নোট : পণ্যের ছবি এবং বিবরণীর সাথে মিল থাকা সত্ত্বেও পণ্য গ্রহণ করতে
