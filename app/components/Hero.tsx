@@ -10,10 +10,7 @@ const Hero = () => {
           className="max-w-[90vw] md:max-w-[40vw] rounded-lg shadow-2xl"
         />
         <div>
-          <h1 className="text-5xl font-bold">
-            Gadgetify <br />{process.env.CLOUDINARY_CLOUD_NAME} <br />
-            {/* {env("CLOUDINARY_CLOUD_NAME")} */}
-          </h1>
+          <h1 className="text-5xl font-bold">Gadgetify</h1>
           <p className="py-6">
             Gadgetify is a one-stop shop for all your gadgets needs. We sell
             everything from phones to laptops to smartwatches and more! Come

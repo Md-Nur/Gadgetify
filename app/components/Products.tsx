@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import DeleteProductButton from "./DeleteProductButton";
+// import DeleteProductButton from "./DeleteProductButton";
 
 const Products = () => {
   // interface Props {
@@ -31,7 +31,6 @@ const Products = () => {
       .catch((err) => setError(err));
   }, [error, products]);
   if (error) return <div>Error: {error}</div>;
-
   return (
     <>
       <h1 className="text-3xl font-bold text-center my-9">Products</h1>
@@ -50,7 +49,7 @@ const Products = () => {
             ))
           : products.map((product) => (
               <div
-                className="card w-64 sm:w-96 h-[500px] m-1 md:m-5 bg-base-100 shadow-xl"
+                className="card w-[95vw] max-w-md h-[500px] m-1 md:m-5 bg-base-100 shadow-xl"
                 key={product.id}
               >
                 <figure>
@@ -60,11 +59,7 @@ const Products = () => {
                       .toLowerCase()}/${product.id}`}
                   >
                     <Image
-                      src={
-                        product.images[0][1] === "/"
-                          ? product.images[0].slice(8)
-                          : product.images[0]
-                      }
+                      src={product.images[0]}
                       alt={product.images[0]}
                       width={500}
                       height={500}
@@ -93,13 +88,13 @@ const Products = () => {
                     <Link href="/order-form" className="btn btn-success">
                       Order Now
                     </Link>
-                    {/* <DeleteProductButton {...{ id: product.id }} /> */}
+                    {/* <DeleteProductButton {...{ id: product.id }} />
                     <Link
                       href={`/admin/update-product/${product.id}`}
                       className="btn btn-info"
                     >
                       Update
-                    </Link>
+                    </Link> */}
                   </div>
                 </div>
               </div>
