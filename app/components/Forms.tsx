@@ -53,7 +53,7 @@ const Forms: React.FC<Props> = ({
   }
 
   return (
-    <section className="flex flex-col items-center justify-center bg-base-200 p-5 md:p-10">
+    <section className="flex flex-col items-center justify-center bg-base-200 p-2 sm:p-5 md:p-10">
       <h2 className="text-3xl font-bold">{headingName}</h2>
       <form
         ref={ref}

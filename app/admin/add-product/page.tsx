@@ -33,7 +33,7 @@ const page = () => {
         htmlFor="img"
         className="flex items-center justify-between w-full px-1 md:px-4 py-1 border rounded"
       >
-        <span className="text-lg">Images: </span>
+        <span className="hidden sm:inline text-xs md:text-lg">Images: </span>
         <input
           type="file"
           name="images"

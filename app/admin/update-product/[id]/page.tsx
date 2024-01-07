@@ -59,7 +59,7 @@ const UpdateProduct = ({ params }: { params: { id: string } }) => {
         htmlFor="img"
         className="flex items-center justify-between w-full px-1 md:px-4 py-1 border rounded"
       >
-        <span className="text-xs">
+        <span className="hidden md:inline text-xs">
           Images: (If you don&apos;t want to update image remain this field
           blank){" "}
         </span>

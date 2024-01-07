@@ -28,10 +28,6 @@ const uploadOnCloudinary = async (bufferFile) => {
   });
 };
 
-// const images = [
-//   "Gadgetify/products/zc44ototmhalxmupiys4",
-//   "Gadgetify/products/n5ond6chgim0hpmpo72q",
-// ];
 
 const deleteOnCloudinary = async (images) => {
   await cloudinary.api
