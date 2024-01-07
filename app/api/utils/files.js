@@ -64,10 +64,11 @@ export const deleteFiles = async (images) => {
     const mainName = urlArr[urlArr.length - 1];
     const nameExt = mainName.split(".");
     const withoutExt = nameExt[0];
+    
     imagesUrl.push(`Gadgetify/products/${withoutExt}`);
   });
   try {
-    await deleteOnCloudinary(images); // deleting the previous files
+    await deleteOnCloudinary(imagesUrl); // deleting the previous files
   } catch (e) {
     throw new ApiError(404, `There have no file named: ${images}`, e);
   }

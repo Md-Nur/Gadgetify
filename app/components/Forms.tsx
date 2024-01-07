@@ -31,19 +31,18 @@ const Forms: React.FC<Props> = ({
     if (!formData) {
       throw Error("There have no form data: " + formData);
     }
-    await toast
-      .promise(
-        fetch(apiUrl, {
-          method: method,
-          body: formData,
-        }),
-        {
-          pending: "Processing request",
-          success: "Success👌",
-          error: "There is a problem to processing the request 🤯",
-        }
-      )
-    
+    await toast.promise(
+      fetch(apiUrl, {
+        method: method,
+        body: formData,
+      }),
+      {
+        pending: "Processing request",
+        success: "Success👌",
+        error: "There is a problem to processing the request 🤯",
+      }
+    );
+
     if (method === "PUT") {
       let url = apiUrl.split("/"); // /api/product/${params.id}
       router.push(`/products/updated/${url[3]}`);
@@ -64,15 +63,16 @@ const Forms: React.FC<Props> = ({
       >
         {children}
         <div className="flex justify-evenly w-full flex-wrap ">
-          <input
-            type="submit"
-            className="btn btn-outline rounded"
-            value={submitName || "submit"}
-            disabled={pending}
-          />
-          {pending && (
-            <span className="loading loading-infinity loading-md"></span>
-          )}
+          <button className="btn btn-outline rounded">
+            <input
+              type="submit"
+              value={submitName || "submit"}
+              disabled={pending}
+            />
+            {pending && (
+              <span className="loading loading-infinity loading-md"></span>
+            )}
+          </button>
           <input
             type="reset"
             className="btn btn-outline rounded"

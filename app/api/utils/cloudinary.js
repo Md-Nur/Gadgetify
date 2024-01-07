@@ -34,9 +34,9 @@ const uploadOnCloudinary = async (bufferFile) => {
 // ];
 
 const deleteOnCloudinary = async (images) => {
-  cloudinary.api
-    .delete_resources(images, { type: "upload", resource_type: "auto" })
-    .then(() => console.log("Images deleted successfully"))
+  await cloudinary.api
+    .delete_resources(images, { type: "upload", resource_type: "image" })
+    .then(() => console.info("Images deleted successfully"))
     .catch((e) => console.error(e));
 };
 

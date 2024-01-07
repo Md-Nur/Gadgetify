@@ -39,7 +39,7 @@ export async function PUT(
     try {
       await deleteFiles(images); // deleting the previous files
     } catch {
-      throw new ApiError(420, "There have a problem to delte previous images");
+      throw new ApiError(420, "There have a problem to delete previous images");
     }
     try {
       images = await fileToUrl(files);
@@ -88,7 +88,7 @@ export async function DELETE(
 
   let images: string[] = prevData?.images!;
 
-  deleteFiles(images); // deleting the previous files
+  await deleteFiles(images); // deleting the previous files
 
   const product = await prisma.product.delete({
     where: { id: Number(params.id) },
