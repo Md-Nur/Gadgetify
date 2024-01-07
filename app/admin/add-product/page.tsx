@@ -5,7 +5,7 @@ const page = () => {
     headingName: "Add Product",
     method: "POST",
     apiUrl: "/api/product",
-    submitName: "Add product"
+    submitName: "Add product",
   };
   return (
     <Forms {...Props}>
@@ -31,7 +31,7 @@ const page = () => {
       />
       <label
         htmlFor="img"
-        className="flex items-center justify-between w-full px-4 py-1 border rounded"
+        className="flex items-center justify-between w-full px-1 md:px-4 py-1 border rounded"
       >
         <span className="text-lg">Images: </span>
         <input
@@ -63,7 +63,6 @@ const page = () => {
         className="input input-bordered w-full"
         required
       />
-      
     </Forms>
   );
 };
