@@ -38,7 +38,6 @@ const OrderForm = () => {
         className="textarea textarea-bordered w-full"
         placeholder="Delivary Address"
       />
-      <input className="btn btn-outline rounded" type="submit" value="Submit" />
     </Forms>
   );
 };
