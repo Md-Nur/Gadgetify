@@ -1,6 +1,6 @@
 "use server";
-import fs, { unlinkSync } from "fs";
-import uploadOnCloudinay from "@/app/utils/cloudinary";
+import uploadOnCloudinay, { deleteOnCloudinary } from "@/app/utils/cloudinary";
+import ApiError from "./ApiError";
 // import { writeFile } from "fs/promises";
 // const fs = require("fs")
 
@@ -26,7 +26,7 @@ import uploadOnCloudinay from "@/app/utils/cloudinary";
 
 export const fileToUrl = async (files) => {
   if (files.length < 1) {
-    return false;
+    throw new ApiError(404, "At least one image is required");
   }
   let images = [];
 
@@ -34,33 +34,40 @@ export const fileToUrl = async (files) => {
     const extention = file.name.split(".").pop();
 
     if (!extention || !["jpg", "jpeg", "png"].includes(extention)) {
-      return false;
+      throw new ApiError(
+        500,
+        "Files must be and image extention wiht jpg/jpeg/png"
+      );
     }
     const byteData = await file.arrayBuffer();
     const buffer = Buffer.from(byteData);
-    // const path = `./public/images/products/${Date.now()}.${extention}`;
     try {
-      // await writeFile(path, buffer);
       let path = await uploadOnCloudinay(buffer);
-      // if (path) {
-      //   console.info(path);
-      // }
+
       images.push(path);
     } catch (e) {
-      // console.error(e);
-      return false;
+      throw new ApiError(450, e);
     }
   }
   return images;
 };
 
-export const deleteFiles = (images) => {
-  // delete files 1st
-  images.forEach((img) => {
-    try {
-      unlinkSync(img);
-    } catch {
-      console.log(`There have no file named: ${img}`);
-    }
-  });
+export const deleteFiles = async (images) => {
+  if (images.length < 1) {
+    throw new ApiError(404, "At least one image is required");
+  }
+  let imagesUrl = [];
+  try {
+    images.forEach((img) => {
+      const urlArr = img.split("/");
+      const mainName = urlArr[urlArr.length - 1];
+      const nameExt = mainName.split(".");
+      const withoutExt = nameExt[0];
+      imagesUrl.push(`Gadgetify/products/${withoutExt}`);
+    });
+
+    await deleteOnCloudinary(images); // deleting the previous files
+  } catch (e) {
+    throw new ApiError(404, `There have no file named: ${images}`, e);
+  }
 };

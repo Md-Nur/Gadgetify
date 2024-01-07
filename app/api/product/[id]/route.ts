@@ -33,13 +33,19 @@ export async function PUT(
     },
   });
 
-  let images: string[] | boolean = prevData?.images!;
-
+  let images: string[] = prevData?.images!;
 
   if (files[0] && files && files[0].size > 1) {
-    deleteFiles(images); // deleting the previous files
-    images = await fileToUrl(files);
-    if (!images) throw new ApiError(404, "Image not found");
+    try {
+      await deleteFiles(images); // deleting the previous files
+    } catch {
+      throw new ApiError(420, "There have a problem to delte previous images");
+    }
+    try {
+      images = await fileToUrl(files);
+    } catch {
+      throw new ApiError(404, "There have a problem to upload on cloudinary");
+    }
   }
   const body = {
     name: data.get("name"),
@@ -56,12 +62,12 @@ export async function PUT(
     return NextResponse.json(validatedData.error.errors, { status: 400 });
   }
 
-  const product = await prisma.product.update({
-    where: { id: Number(params.id) },
-    data: validatedData.data,
-  });
-
-  if (!product) {
+  try {
+    await prisma.product.update({
+      where: { id: Number(params.id) },
+      data: validatedData.data,
+    });
+  } catch {
     throw new ApiError(404, "Product not found");
   }
 
@@ -80,7 +86,7 @@ export async function DELETE(
     },
   });
 
-  let images: string[] | boolean = prevData?.images!;
+  let images: string[] = prevData?.images!;
 
   deleteFiles(images); // deleting the previous files
 

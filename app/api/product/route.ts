@@ -19,6 +19,7 @@ export async function POST(req: NextRequest) {
   const data = await req.formData();
   const files: any = data.getAll("images");
   const images = await fileToUrl(files);
+  
   if (!images || images.length < 1) {
     throw new ApiError(400, "Images are required");
   }

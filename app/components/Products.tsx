@@ -5,6 +5,9 @@ import Link from "next/link";
 import DeleteProductButton from "./DeleteProductButton";
 
 const Products = () => {
+  // interface Props {
+  //   id: string;
+  // }
   const [products, setProducts]: [
     {
       id: number;
@@ -90,7 +93,7 @@ const Products = () => {
                     <Link href="/order-form" className="btn btn-success">
                       Order Now
                     </Link>
-                    <DeleteProductButton id={product.id} />
+                    {/* <DeleteProductButton {...{ id: product.id }} /> */}
                     <Link
                       href={`/admin/update-product/${product.id}`}
                       className="btn btn-info"
