@@ -63,12 +63,8 @@ const Forms: React.FC<Props> = ({
       >
         {children}
         <div className="flex justify-evenly w-full flex-wrap ">
-          <button className="btn btn-outline rounded">
-            <input
-              type="submit"
-              value={submitName || "submit"}
-              disabled={pending}
-            />
+          <button className="btn btn-outline rounded" disabled={pending}>
+            <input type="submit" value={submitName || "submit"} />
             {pending && (
               <span className="loading loading-infinity loading-md"></span>
             )}
