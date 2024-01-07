@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { string, z } from "zod";
+import { z } from "zod";
 import prisma from "@/prisma/client";
 import { fileToUrl } from "@/app/api/utils/files";
 import ApiError from "@/app/api/utils/ApiError";

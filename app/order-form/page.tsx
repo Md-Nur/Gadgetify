@@ -2,9 +2,10 @@ import React from "react";
 import Forms from "../components/Forms";
 
 const Props: any = {
-  action: "",
   method: "POST",
   headingName: "Customer Information",
+  apiUrl: "",
+  submitName: "Order Now",
 };
 const OrderForm = () => {
   return (
@@ -15,7 +16,7 @@ const OrderForm = () => {
         className="input input-bordered w-full "
       />
       <input
-        type="number"
+        type="tel"
         placeholder="Phone Number"
         className="input input-bordered w-full "
       />
@@ -23,13 +24,13 @@ const OrderForm = () => {
         <legend className="text-xl">Select Area</legend>
         <div className="form-control">
           <label className="label cursor-pointer justify-start gap-3">
-            <input type="radio" name="Dhaka" className="radio" checked />
+            <input type="radio" value={0} name="isDhaka" className="radio" checked />
             <span className="label-text">Out of Dhaka City</span>
           </label>
         </div>
         <div className="form-control">
           <label className="label cursor-pointer justify-start gap-3">
-            <input type="radio" name="Dhaka" className="radio" checked />
+            <input type="radio" value={1} name="isDhaka" className="radio" checked />
             <span className="label-text">In Dhaka City</span>
           </label>
         </div>
@@ -37,6 +38,7 @@ const OrderForm = () => {
       <textarea
         className="textarea textarea-bordered w-full"
         placeholder="Delivary Address"
+        name="address"
       />
     </Forms>
   );
