@@ -1,5 +1,7 @@
-"use server";
-import uploadOnCloudinay, { deleteOnCloudinary } from "@/app/utils/cloudinary";
+// "use server";
+import uploadOnCloudinay, {
+  deleteOnCloudinary,
+} from "@/app/api/utils/cloudinary";
 import ApiError from "./ApiError";
 // import { writeFile } from "fs/promises";
 // const fs = require("fs")
@@ -57,15 +59,14 @@ export const deleteFiles = async (images) => {
     throw new ApiError(404, "At least one image is required");
   }
   let imagesUrl = [];
+  images.forEach((img) => {
+    const urlArr = img.split("/");
+    const mainName = urlArr[urlArr.length - 1];
+    const nameExt = mainName.split(".");
+    const withoutExt = nameExt[0];
+    imagesUrl.push(`Gadgetify/products/${withoutExt}`);
+  });
   try {
-    images.forEach((img) => {
-      const urlArr = img.split("/");
-      const mainName = urlArr[urlArr.length - 1];
-      const nameExt = mainName.split(".");
-      const withoutExt = nameExt[0];
-      imagesUrl.push(`Gadgetify/products/${withoutExt}`);
-    });
-
     await deleteOnCloudinary(images); // deleting the previous files
   } catch (e) {
     throw new ApiError(404, `There have no file named: ${images}`, e);
