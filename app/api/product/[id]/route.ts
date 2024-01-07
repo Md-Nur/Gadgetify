@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { productSchema } from "../route";
 import prisma from "@/prisma/client";
-import { deleteFiles, fileToUrl } from "../../../utils/files";
-import ApiError from "@/app/utils/ApiError";
-import ApiResponse from "@/app/utils/ApiResponse";
+import { deleteFiles, fileToUrl } from "../../utils/files";
+import ApiError from "@/app/api/utils/ApiError";
+import ApiResponse from "@/app/api/utils/ApiResponse";
 
 export async function GET(
   req: NextRequest,

@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { string, z } from "zod";
 import prisma from "@/prisma/client";
-import { fileToUrl } from "@/app/utils/files";
-import ApiError from "@/app/utils/ApiError";
-import ApiResponse from "@/app/utils/ApiResponse";
+import { fileToUrl } from "@/app/api/utils/files";
+import ApiError from "@/app/api/utils/ApiError";
+import ApiResponse from "@/app/api/utils/ApiResponse";
 
 export const productSchema: any = z.object({
   name: z.string(),
@@ -19,7 +19,7 @@ export async function POST(req: NextRequest) {
   const data = await req.formData();
   const files: any = data.getAll("images");
   const images = await fileToUrl(files);
-  
+
   if (!images || images.length < 1) {
     throw new ApiError(400, "Images are required");
   }
