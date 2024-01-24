@@ -18,7 +18,7 @@ export interface Product {
   price: number;
   description: string;
   images: string[];
-  brand: string;
+  code: number;
   category: string;
   stockQuantity: number;
 }
@@ -50,9 +50,9 @@ const SingleProduct = ({
   }
 
   return (
-    <div className="">
-      <div className="flex flex-wrap justify-evenly items-center bg-base-200 rounded m-1 p-1 sm:m-3 sm:p-3 md:m-6 md:p-6 lg:m-8 lg:p-8">
-        <div>
+    <div className="max-w-6xl mx-auto py-12">
+      <div className="flex flex-col lg:flex-row justify-evenly items-center bg-base-200 rounded p-5 gap-5">
+        <div className="w-full lg:w-1/2">
           <Swiper
             modules={[Autoplay, Navigation, Pagination]}
             pagination={{ clickable: true }}
@@ -61,21 +61,17 @@ const SingleProduct = ({
             slidesPerView={1}
             autoplay
             loop={true}
-            className="max-w-[84vw] md:max-w-[42vw]"
+            className=""
           >
             {product.images.map((image: string, index) => (
               <SwiperSlide className="my-auto" key={index}>
                 <div className="flex w-full h-full items-center justify-center">
                   <Image
                     key={image}
-                    src={
-                      image[1] === "/"
-                        ? image.slice(8)
-                        : image
-                    }
+                    src={image[1] === "/" ? image.slice(8) : image}
                     alt={image.slice(8)}
-                    height={500}
-                    width={500}
+                    height={600}
+                    width={1000}
                     className="object-cover rounded-lg max-h-[600px]"
                   />
                 </div>
@@ -83,9 +79,9 @@ const SingleProduct = ({
             ))}
           </Swiper>
         </div>
-        <div className="min-w-64 sm:min-w-96 p-3 md:max-w-[42vw]">
+        <div className="">
           <h2 className="text-3xl font-bold">{product.name}</h2>
-          <span className="text-sm">Code:{product.id}</span>
+          <span className="text-sm">Code:{product.code}</span>
 
           <p className="py-6">
             <h3 className="text-2xl font-bold">
@@ -123,7 +119,7 @@ const SingleProduct = ({
           </p>
         </div>
       </div>
-      <div className="bg-base-200 rounded m-3 p-3 md:m-6 md:p-6 lg:m-8 lg:p-8">
+      <div className="bg-base-200 rounded my-10 p-3">
         <h3 className="text-2xl font-bold pt-3">Description: </h3>
         <p className="">{product.description}</p>
       </div>

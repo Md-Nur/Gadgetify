@@ -9,7 +9,7 @@ const config: Config = {
 
   plugins: [require("daisyui")],
   daisyui: {
-    themes: ["corporate","synthwave"],
+    themes: ["cupcake","synthwave"],
   },
 };
 

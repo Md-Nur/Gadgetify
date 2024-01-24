@@ -6,7 +6,7 @@ import { FaUser } from "react-icons/fa";
 
 const Navbar = () => {
   return (
-    <nav className="navbar bg-base-100 fixed z-20">
+    <nav className="navbar sticky top-0 glass z-20">
       <div className="flex-1">
         <label htmlFor="my-drawer" className="btn btn-square btn-ghost">
           <svg

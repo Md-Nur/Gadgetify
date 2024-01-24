@@ -10,7 +10,7 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   const product = await prisma.product.findUnique({
-    where: { id: Number(params.id) },
+    where: { id: params.id },
   });
 
   if (!product) {
@@ -29,7 +29,7 @@ export async function PUT(
 
   const prevData = await prisma.product.findUnique({
     where: {
-      id: parseInt(params.id),
+      id: params.id,
     },
   });
 
@@ -52,7 +52,7 @@ export async function PUT(
     price: Number(data.get("price")),
     description: data.get("description"),
     images: images,
-    brand: data.get("brand") || "",
+    code: Number(data.get("code")),
     category: data.get("category") || "",
     stockQuantity: Number(data.get("stockQuantity")),
   };
@@ -64,7 +64,7 @@ export async function PUT(
 
   try {
     await prisma.product.update({
-      where: { id: Number(params.id) },
+      where: { id: params.id },
       data: validatedData.data,
     });
   } catch {
@@ -82,7 +82,7 @@ export async function DELETE(
 ) {
   const prevData = await prisma.product.findFirst({
     where: {
-      id: parseInt(params.id),
+      id: params.id,
     },
   });
 
@@ -91,7 +91,7 @@ export async function DELETE(
   await deleteFiles(images); // deleting the previous files
 
   const product = await prisma.product.delete({
-    where: { id: Number(params.id) },
+    where: { id: params.id },
   });
 
   if (!product || !prevData) {

@@ -46,15 +46,16 @@ const page = () => {
       </label>
       <input
         type="text"
-        placeholder="Brand"
-        name="brand"
-        className="input input-bordered w-full"
-      />
-      <input
-        type="text"
         placeholder="Category"
         name="category"
         className="input input-bordered w-full"
+      />
+      <input
+        type="number"
+        placeholder="Product Code"
+        name="code"
+        className="input input-bordered w-full"
+        required
       />
       <input
         type="number"

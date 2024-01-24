@@ -31,17 +31,29 @@ const Forms: React.FC<Props> = ({
     if (!formData) {
       throw Error("There have no form data: " + formData);
     }
-    await toast.promise(
-      fetch(apiUrl, {
-        method: method,
-        body: formData,
-      }),
-      {
-        pending: "Processing request",
-        success: "Success👌",
-        error: "There is a problem to processing the request 🤯",
-      }
-    );
+    // await toast.promise(
+    //   fetch(apiUrl, {
+    //     method: method,
+    //     body: formData,
+    //   }),
+    //   {
+    //     pending: "Processing request",
+    //     success: "Success👌",
+    //     error: "There is a problem to processing the request 🤯",
+    //   }
+    // );
+    toast.loading("Uploading product...");
+    await fetch(apiUrl, {
+      method: method,
+      body: formData,
+    })
+      .then((res) => res.json())
+      .then((jData) => {
+        toast.dismiss();
+        jData.success
+          ? toast.success(jData.message)
+          : toast.error(jData.errors);
+      });
 
     if (method === "PUT") {
       let url = apiUrl.split("/"); // /api/product/${params.id}

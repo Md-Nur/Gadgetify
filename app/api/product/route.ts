@@ -11,7 +11,7 @@ export const productSchema: any = z.object({
   description: z.string().max(1000),
   images: z.array(z.string()),
   stockQuantity: z.number(),
-  brand: z.string(),
+  code: z.number(),
   category: z.string(),
 });
 
@@ -21,30 +21,51 @@ export async function POST(req: NextRequest) {
   const images = await fileToUrl(files);
 
   if (!images || images.length < 1) {
-    throw new ApiError(400, "Images are required");
+    return NextResponse.json(new ApiError(404, "Images are required"), {
+      status: 404,
+    });
   }
+
+  if (!data.get("code")) {
+    return NextResponse.json(new ApiError(404, "Product code is required"), {
+      status: 404,
+    });
+  }
+
   const body = {
     name: data.get("name"),
     price: Number(data.get("price")),
     description: data.get("description"),
     images: images,
-    brand: data.get("brand") || "",
+    code: Number(data.get("code")),
     category: data.get("category") || "",
     stockQuantity: Number(data.get("stockQuantity")),
   };
 
   const validatedData = productSchema.safeParse(body);
   if (!validatedData.success) {
-    throw new ApiError(400, "Plase give valid data types", [
-      validatedData.error.errors,
-    ]);
+    return NextResponse.json(
+      new ApiError(
+        400,
+        "Plase give valid data types",
+        validatedData.error.errors
+      ),
+      { status: 400 }
+    );
   }
-  const product = await prisma.product.create({ data: validatedData.data });
-
+  let product;
+  try {
+    product = await prisma.product.create({ data: validatedData.data });
+  } catch (error: any) {
+    return NextResponse.json(new ApiError(500, error.message), { status: 500 });
+  }
   if (!product) {
-    throw new ApiError(
-      500,
-      "There have some porblem to create this product in database"
+    return NextResponse.json(
+      new ApiError(
+        500,
+        "There have some porblem to create this product in database"
+      ),
+      { status: 500 }
     );
   }
 
