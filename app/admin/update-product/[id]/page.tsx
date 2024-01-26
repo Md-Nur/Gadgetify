@@ -15,14 +15,16 @@ const UpdateProduct = ({ params }: { params: { id: string } }) => {
   useEffect(() => {
     fetch(`/api/product/${params.id}`)
       .then((res) => res.json())
-      .then((data) => setProduct(data))
-      .catch((err) => setError(err));
+      .then((jdata) => {
+        jdata.success ? setProduct(jdata.data) : setError(jdata.errors);
+      })
+      .catch((err) => setError(err.message));
   }, [params.id]);
 
   if (error || !product)
     return (
       <div className="h-screen flex justify-center items-center">
-        <span className=" loading loading-infinity loading-lg"></span>
+        <span className=" loading loading-bars loading-lg"></span>
       </div>
     );
 
@@ -72,14 +74,7 @@ const UpdateProduct = ({ params }: { params: { id: string } }) => {
           multiple
         />
       </label>
-      <input
-        type="text"
-        placeholder="Brand"
-        name="brand"
-        className="input input-bordered w-full"
-        value={product?.brand}
-        onChange={(e) => setProduct({ ...product, brand: e.target.value })}
-      />
+
       <input
         type="text"
         placeholder="Category"
@@ -87,6 +82,15 @@ const UpdateProduct = ({ params }: { params: { id: string } }) => {
         className="input input-bordered w-full"
         value={product?.category}
         onChange={(e) => setProduct({ ...product, category: e.target.value })}
+      />
+      <input
+        type="number"
+        placeholder="Product Code"
+        name="code"
+        className="input input-bordered w-full"
+        onChange={(e) =>
+          setProduct({ ...product, code: Number(e.target.value) })
+        }
       />
       <input
         type="number"

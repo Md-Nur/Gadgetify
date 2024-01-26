@@ -14,10 +14,12 @@ export async function GET(
   });
 
   if (!product) {
-    return NextResponse.json({ message: "No product is found with this Id!!" });
+    return NextResponse.json(new ApiError(404, "Product not found"), {
+      status: 404,
+    });
   }
 
-  return NextResponse.json(product);
+  return NextResponse.json(new ApiResponse(200, product), { status: 200 });
 }
 
 export async function PUT(

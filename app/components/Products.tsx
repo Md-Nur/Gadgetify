@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import AddCartButton from "./AddCartButton";
 // import DeleteProductButton from "./DeleteProductButton";
 
 const Products = () => {
@@ -10,7 +11,7 @@ const Products = () => {
   // }
   const [products, setProducts]: [
     {
-      id: number;
+      id: string;
       name: string;
       price: number;
       description: string;
@@ -26,10 +27,13 @@ const Products = () => {
   useEffect(() => {
     fetch("/api/product")
       .then((res) => res.json())
-      .then((data) => data.reverse())
-      .then((data) => setProducts(data))
+      .then((jData) => {
+        jData.success
+          ? setProducts(jData.data.reverse())
+          : setError(jData.errors);
+      })
       .catch((err) => setError(err));
-  }, [error, products]);
+  }, []);
   if (error) return <div>Error: {error}</div>;
   return (
     <>
@@ -41,10 +45,10 @@ const Products = () => {
                 key={i}
                 className="flex flex-col gap-4 h-[500px] w-[90vw] max-w-md shadow"
               >
-                <div className="skeleton h-72 w-full"></div>
-                <div className="skeleton h-4 w-44 ml-5"></div>
-                <div className="skeleton h-4 w-44 ml-5"></div>
-                <div className="skeleton h-10 w-44 ml-7 md:ml-48"></div>
+                <div className="my-5 skeleton h-72 w-full"></div>
+                <div className="my-5 skeleton h-4 w-44 ml-5"></div>
+                <div className="my-5 skeleton h-4 w-44 ml-5"></div>
+                <div className="my-5 skeleton h-10 w-44 ml-7 md:ml-48"></div>
               </div>
             ))
           : products.map((product) => (
@@ -82,10 +86,12 @@ const Products = () => {
                   </p>
 
                   <div className="card-actions justify-end">
-                    <Link href="/order-form" className="btn btn-primary">
-                      Add to Cart
-                    </Link>
-                    <Link href="/order-form" className="btn btn-success">
+                    <AddCartButton
+                      productId={product.id}
+                      name={product.name}
+                      price={product.price}
+                    />
+                    <Link href="/order-form" className="btn btn-success my-3">
                       Order Now
                     </Link>
                     {/* <DeleteProductButton {...{ id: product.id }} />

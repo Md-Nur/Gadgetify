@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "ES2022",
+    "outDir": "dist",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
@@ -22,6 +23,6 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "app/api/utils/files.js", "app/Hero.tsxasdf", "app/api/utils/ApiError.js", "app/api/utils/ApiResponse.js", "app/components/DeleteProductButton.jsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "app/api/utils/files.js", "app/Hero.tsxasdf", "app/api/utils/ApiError.js", "app/api/utils/ApiResponse.js", "app/components/DeleteProductButton.jsx", "app/api/utils/cart.js"],
   "exclude": ["node_modules"]
 }

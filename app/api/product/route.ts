@@ -42,6 +42,18 @@ export async function POST(req: NextRequest) {
     stockQuantity: Number(data.get("stockQuantity")),
   };
 
+  // check the product code is already in the database
+  const prevProduct = await prisma.product.findFirst({
+    where: {
+      code: body.code,
+    },
+  });
+  if (prevProduct) {
+    return NextResponse.json(new ApiError(400, "Product code already exists"), {
+      status: 400,
+    });
+  }
+
   const validatedData = productSchema.safeParse(body);
   if (!validatedData.success) {
     return NextResponse.json(
@@ -80,6 +92,9 @@ export async function POST(req: NextRequest) {
 
 export async function GET() {
   const products = await prisma.product.findMany({});
-
-  return NextResponse.json(products);
+  if (!products)
+    return NextResponse.json(new ApiError(404, "There have no products"), {
+      status: 404,
+    });
+  return NextResponse.json(new ApiResponse(200, products), { status: 200 });
 }

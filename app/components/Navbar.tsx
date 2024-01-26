@@ -1,27 +1,35 @@
+"use client";
 import Link from "next/link";
-import React from "react";
 import Image from "next/image";
 import Logo from "../../public/images/logo.png";
 import { FaUser } from "react-icons/fa";
+import { FaCartShopping } from "react-icons/fa6";
+import { GiHamburgerMenu } from "react-icons/gi";
+import { useCartContext } from "../context/cartContext";
+import { useState, useEffect } from "react";
 
 const Navbar = () => {
+  const { cartStatus } = useCartContext();
+  const [totalProduct, setTotalProduct] = useState<number>();
+  const [totalPrice, setTotalPrice] = useState<number>();
+  useEffect(() => {
+    let price = 0;
+    let p = 0;
+    cartStatus.forEach((cart) => {
+      p += cart?.productQuantity;
+      price += cart?.productPrice * cart?.productQuantity;
+    });
+    setTotalProduct(p);
+    setTotalPrice(price);
+  }, [cartStatus]);
   return (
     <nav className="navbar sticky top-0 glass z-20">
       <div className="flex-1">
-        <label htmlFor="my-drawer" className="btn btn-square btn-ghost">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            className="inline-block w-5 h-5 stroke-current"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M4 6h16M4 12h16M4 18h16"
-            ></path>
-          </svg>
+        <label
+          htmlFor="my-drawer"
+          className="flex btn btn-square btn-ghost md:hidden justify-center items-center"
+        >
+          <GiHamburgerMenu className="inline-block w-5 h-5 stroke-current" />
         </label>
         <Link href="/" className="btn btn-ghost text-xl">
           <Image src={Logo} alt="Logo" width={50} height={50} />
@@ -29,7 +37,12 @@ const Navbar = () => {
         </Link>
       </div>
       <div className="flex-none gap-2">
-        <div className="form-control hidden sm:block">
+        <div className="form-control hidden md:flex md:items-center md:gap-2 md:flex-row">
+          <input
+            type="checkbox"
+            value="synthwave"
+            className="toggle theme-controller"
+          />
           <input
             type="text"
             placeholder="Search"
@@ -40,21 +53,10 @@ const Navbar = () => {
         <div className="dropdown dropdown-end">
           <div tabIndex={0} role="button" className="btn btn-ghost btn-circle">
             <div className="indicator">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
-                />
-              </svg>
-              <span className="badge badge-sm indicator-item">8</span>
+              <FaCartShopping className="h-5 w-5" />
+              <span className="badge badge-sm indicator-item">
+                {totalProduct}
+              </span>
             </div>
           </div>
           <div
@@ -62,10 +64,12 @@ const Navbar = () => {
             className="mt-3 z-[1] card card-compact dropdown-content w-52 bg-base-100 shadow"
           >
             <div className="card-body">
-              <span className="font-bold text-lg">8 Items</span>
-              <span className="text-info">Subtotal: $999</span>
+              <span className="font-bold text-lg">{totalProduct} Items</span>
+              <span className="text-info">Subtotal: Tk.{totalPrice}</span>
               <div className="card-actions">
-                <button className="btn btn-primary btn-block">View cart</button>
+                <Link href="/cart" className="btn btn-primary btn-block">
+                  View cart
+                </Link>
               </div>
             </div>
           </div>

@@ -69,7 +69,7 @@ const Forms: React.FC<Props> = ({
       <h2 className="text-3xl font-bold">{headingName}</h2>
       <form
         ref={ref}
-        className="flex flex-col items-center justify-center  rounded-lg px-5 py-10 md:m-5 w-[80vw] gap-5 bg-base-100"
+        className="flex flex-col items-center justify-center  rounded-lg px-5 py-10 md:m-5 w-auto mx-auto gap-5 bg-base-100"
         method={method}
         onSubmit={onSubmit}
       >

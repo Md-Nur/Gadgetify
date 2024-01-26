@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import AddCartButton from "@/app/components/AddCartButton";
 
 import DeleteProductButton from "@/app/components/DeleteProductButton";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -36,7 +37,9 @@ const SingleProduct = ({
   useEffect(() => {
     fetch(`/api/product/${id}`)
       .then((res) => res.json())
-      .then((data) => setProduct(data))
+      .then((jData) => {
+        jData.success ? setProduct(jData.data) : setError(jData.errors);
+      })
       .catch((err) => setError(err));
   }, [id]);
 
@@ -44,7 +47,7 @@ const SingleProduct = ({
   if (!product) {
     return (
       <div className="h-screen flex justify-center items-center">
-        <span className="loading loading-infinity loading-lg"></span>
+        <span className="loading loading-bars loading-lg"></span>
       </div>
     );
   }
@@ -99,9 +102,12 @@ const SingleProduct = ({
             Delivery Charge: Inside Dhaka : 60 Tk. / Outside Dhaka : 130 Tk.
           </p>
           <div className="flex flex-wrap items-center justify-evenly w-full">
-            <Link href="/order-form" className="btn btn-primary my-3">
-              Add to cart
-            </Link>
+            <AddCartButton
+              productId={id}
+              name={product.name}
+              price={product.price}
+            />
+
             <Link href="/order-form" className="btn btn-success my-3">
               Order Now
             </Link>

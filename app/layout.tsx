@@ -5,7 +5,7 @@ import Navbar from "./components/Navbar";
 import Drawer from "./components/Drawer";
 import Footer from "./components/Footer";
 import Toast from "./components/Toast";
-import { AdminAuthProvider } from "./context/admin";
+import GlobalContext from "./GlobalContext";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -23,12 +23,14 @@ export default function RootLayout({
   return (
     <html lang="en" data-theme="corporate">
       <body className={inter.className}>
-        <Drawer>
-          <Navbar />
-          <Toast />
-          <AdminAuthProvider>{children}</AdminAuthProvider>
-          <Footer />
-        </Drawer>
+        <GlobalContext>
+          <Drawer>
+            <Navbar />
+            {children}
+            <Toast />
+            <Footer />
+          </Drawer>
+        </GlobalContext>
       </body>
     </html>
   );

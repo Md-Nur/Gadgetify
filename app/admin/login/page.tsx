@@ -1,3 +1,4 @@
+"use client";
 import { useAdminAuth } from "@/app/context/admin";
 import React from "react";
 

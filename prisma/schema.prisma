@@ -15,12 +15,12 @@ datasource db {
 // User model
 model User {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  username  String
-  email     String   @unique
+  name      String?
+  phone     String   @unique
   password  String
+  address   String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  address   String
   orders    Order[]
 }
 
@@ -28,14 +28,14 @@ model User {
 model Product {
   id            String      @id @default(auto()) @map("_id") @db.ObjectId
   name          String
-  price         Float
+  price         Int
   description   String
   images        String[]
   code          Int
-  category      String      @default("")
+  category      String?
   stockQuantity Int         @default(0)
-  rating        Float       @default(0)
-  numReviews    Int         @default(0)
+  rating        Float?
+  numReviews    Int?
   orderItems    OrderItem[]
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
@@ -55,10 +55,9 @@ model Order {
 // OrderItem model
 model OrderItem {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  quantity  Int
   productId String   @db.ObjectId
   product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
-  quantity  Int
-  subtotal  Int
   orderId   String   @db.ObjectId
   order     Order    @relation(fields: orderId, references: [id])
   createdAt DateTime @default(now())
