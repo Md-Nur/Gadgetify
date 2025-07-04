@@ -2,6 +2,7 @@
 import { ReactNode, FormEvent, useState, useRef } from "react";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
+import { useUserAuth } from "../context/userContext";
 
 interface Props {
   children: ReactNode;
@@ -20,6 +21,7 @@ const Forms: React.FC<Props> = ({
   submitName,
   ...props
 }) => {
+  const {userAuth,setUserAuth} = useUserAuth();
   const [pending, setPending] = useState(false);
   const ref = useRef<HTMLFormElement>(null);
   const router = useRouter();
@@ -31,17 +33,7 @@ const Forms: React.FC<Props> = ({
     if (!formData) {
       throw Error("There have no form data: " + formData);
     }
-    // await toast.promise(
-    //   fetch(apiUrl, {
-    //     method: method,
-    //     body: formData,
-    //   }),
-    //   {
-    //     pending: "Processing request",
-    //     success: "Success👌",
-    //     error: "There is a problem to processing the request 🤯",
-    //   }
-    // );
+    
     toast.loading("Uploading product...");
     await fetch(apiUrl, {
       method: method,
@@ -50,15 +42,57 @@ const Forms: React.FC<Props> = ({
       .then((res) => res.json())
       .then((jData) => {
         toast.dismiss();
-        jData.success
-          ? toast.success(jData.message)
-          : toast.error(jData.errors);
+        if(jData.success){
+          
+          toast.success(jData.message)
+        }else{toast.error(jData.errors);}
       });
 
-    if (method === "PUT") {
-      let url = apiUrl.split("/"); // /api/product/${params.id}
+      let url = apiUrl.split("/"); 
+      if (method === "PUT" && url[2] === "product") {
+      // /api/product/${params.id}
       router.push(`/products/updated/${url[3]}`);
+    }  
+    else if (url[4] === "update-admin") {
+      if (userAuth.id === resData?.id) {
+        setUserAuth({
+          id: resData?.id,
+          images: resData?.images,
+          isAdmin: resData?.isAdmin,
+        });
+      }
+      router.push(`/admin/unverified-members`);
+    } // Update user info
+    else if (apiUrl.split("/")[2] === "users" && method === "PUT") {
+      setUserAuth({
+        id: resData?.id,
+        images: resData?.images,
+        isAdmin: resData?.isAdmin,
+      });
+      router.push(`/user/profile/${resData.id || ""}`);
+    } // Update events
+    else if (apiUrl.split("/")[2] === "events" && method === "PUT") {
+      router.push(`/activities/updated/${apiUrl.split("/")[3]}`);
+    } // Update userAuth after login and sign up
+    else if (
+      apiUrl === "/api/users/login" ||
+      apiUrl === "/api/users/signin"
+    ) {
+      setUserAuth({
+        id: resData?.id,
+        images: resData?.images,
+        isAdmin: resData?.isAdmin,
+      });
+      router.push(`/user/profile/${resData.id}`);
+    } // Carousel Update
+    else if (apiUrl.split("/")[2] === "carousel" && method === "PUT") {
+      router.push("/admin");
     }
+    toast.success(jsonData.message);
+  } else {
+    toast.dismiss();
+    toast.error(jsonData.errors);
+  }
 
     ref.current?.reset();
     setPending(false);

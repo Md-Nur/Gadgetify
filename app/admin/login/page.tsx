@@ -1,5 +1,5 @@
 "use client";
-import { useAdminAuth } from "@/app/context/admin";
+import { useAdminAuth } from "@/app/context/userContext";
 import React from "react";
 
 const Login = () => {

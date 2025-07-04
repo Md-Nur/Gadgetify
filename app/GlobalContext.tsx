@@ -1,12 +1,12 @@
 import { ReactNode } from "react";
 import { CartProvider } from "./context/cartContext";
-import { AdminAuthProvider } from "./context/admin";
+import { UserAuthProvider } from "./context/userContext";
 
 const GlobalContext = ({ children }: { children: ReactNode }) => {
   return (
-    <AdminAuthProvider>
+    <UserAuthProvider>
       <CartProvider>{children}</CartProvider>
-    </AdminAuthProvider>
+    </UserAuthProvider>
   );
 };
 
