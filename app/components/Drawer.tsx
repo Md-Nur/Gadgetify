@@ -1,7 +1,6 @@
 "use client";
 import Link from "next/link";
 import React from "react";
-import { FaSun, FaMoon } from "react-icons/fa";
 import { useUserAuth } from "../context/userContext";
 
 const Drawer = ({ children }: { children: React.ReactNode }) => {
@@ -90,20 +89,6 @@ const Drawer = ({ children }: { children: React.ReactNode }) => {
           ))}
 
           <li><div className="divider my-2 opacity-50"></div></li>
-
-          {/* Theme Mode */}
-          <li>
-            <div className="flex items-center justify-between px-4 py-2 hover:bg-transparent">
-              <span className="font-medium text-base-content/70 flex items-center gap-2">
-                <FaSun className="w-4 h-4 text-warning" /> Theme Mode
-              </span>
-              <input
-                type="checkbox"
-                className="toggle theme-controller toggle-md"
-                value="dark"
-              />
-            </div>
-          </li>
 
           {userAuth.isAdmin && (
             <>
