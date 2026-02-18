@@ -71,7 +71,7 @@ const Navbar = () => {
               sizes="(max-width: 768px) 32px, 44px"
             />
           </div>
-          <span className="text-xl md:text-3xl font-extrabold tracking-tighter text-gradient whitespace-nowrap hidden xs:block">
+          <span className="text-xl md:text-3xl font-extrabold tracking-tighter text-gradient whitespace-nowrap hidden sm:block">
             Gadgetify
           </span>
         </Link>

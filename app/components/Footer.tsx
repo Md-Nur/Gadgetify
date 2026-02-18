@@ -2,59 +2,119 @@ import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import Logo from "../../public/images/logo.png";
+import { FaFacebookF, FaTwitter, FaInstagram, FaYoutube, FaEnvelope, FaPhoneAlt, FaMapMarkerAlt } from "react-icons/fa";
 
 const Footer = () => {
   return (
-    <footer className="footer p-10 bg-neutral text-neutral-content">
-      <aside>
-        <Image src={Logo} alt="logo" width={75} height={75} />
-        <p>
-          Gadgetify
-          <br />
-          Providing reliable tech since 2023
-        </p>
-      </aside>
-      <nav>
-        <header className="footer-title">Social</header>
-        <div className="grid grid-flow-col gap-4">
-          <Link href="/">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              className="fill-current"
-            >
-              <path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"></path>
-            </svg>
-          </Link>
-          <Link href="/">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              className="fill-current"
-            >
-              <path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"></path>
-            </svg>
-          </Link>
-          <Link
-            href="https://www.facebook.com/profile.php?id=61554402345206"
-            target="_blank"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              className="fill-current"
-            >
-              <path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"></path>
-            </svg>
-          </Link>
+    <footer className="bg-neutral text-neutral-content pt-16 pb-8 border-t border-primary/10 relative overflow-hidden">
+      {/* Background decoration */}
+      <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl -mr-32 -mt-32"></div>
+      <div className="absolute bottom-0 left-0 w-64 h-64 bg-secondary/5 rounded-full blur-3xl -ml-32 -mb-32"></div>
+
+      <div className="container mx-auto px-4 md:px-8 relative">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
+          {/* Brand Section */}
+          <div className="space-y-6">
+            <Link href="/" className="inline-block group">
+              <div className="flex items-center gap-3">
+                <div className="relative">
+                  <div className="absolute -inset-1 bg-white/20 rounded-full blur group-hover:blur-md transition duration-300"></div>
+                  <Image src={Logo} alt="Gadgetify Logo" width={50} height={50} className="relative" />
+                </div>
+                <span className="text-2xl font-black tracking-tighter text-white">GADGETIFY</span>
+              </div>
+            </Link>
+            <p className="text-neutral-content/70 leading-relaxed max-w-xs">
+              Providing reliable tech and high-quality gadgets since 2023. Your one-stop shop for the latest electronics and accessories.
+            </p>
+            <div className="flex gap-4">
+              {[
+                { icon: <FaFacebookF />, href: "https://www.facebook.com/profile.php?id=61554402345206", bg: "bg-blue-600" },
+                { icon: <FaTwitter />, href: "#", bg: "bg-sky-500" },
+                { icon: <FaInstagram />, href: "#", bg: "bg-pink-600" },
+                { icon: <FaYoutube />, href: "#", bg: "bg-red-600" }
+              ].map((social, i) => (
+                <a
+                  key={i}
+                  href={social.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`w-10 h-10 ${social.bg} rounded-xl flex items-center justify-center text-white hover:scale-110 hover:shadow-lg transition-all duration-300 shadow-md`}
+                >
+                  {social.icon}
+                </a>
+              ))}
+            </div>
+          </div>
+
+          {/* Quick Links */}
+          <div>
+            <h4 className="text-lg font-bold text-white mb-6 uppercase tracking-wider">Explore Shop</h4>
+            <ul className="space-y-4 text-neutral-content/70">
+              {["Smartphones", "Laptops", "Smartwatches", "Accessories", "Audio Gadgets"].map((item) => (
+                <li key={item}>
+                  <Link href={`/products?category=${item}`} className="hover:text-primary transition-colors flex items-center gap-2 group">
+                    <span className="w-1.5 h-1.5 rounded-full bg-primary/40 group-hover:bg-primary transition-all"></span>
+                    {item}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Support Section */}
+          <div>
+            <h4 className="text-lg font-bold text-white mb-6 uppercase tracking-wider">Customer Care</h4>
+            <ul className="space-y-4 text-neutral-content/70">
+              <li><Link href="/cart" className="hover:text-primary transition-colors">My Cart</Link></li>
+              <li><Link href="/order-form" className="hover:text-primary transition-colors">Track Order</Link></li>
+              <li><Link href="#" className="hover:text-primary transition-colors">Privacy Policy</Link></li>
+              <li><Link href="#" className="hover:text-primary transition-colors">Terms & Conditions</Link></li>
+              <li className="pt-2">
+                <div className="badge badge-primary badge-outline font-bold py-3 px-4">Delivery: ৳60 (Dhaka) | ৳130 (Outside)</div>
+              </li>
+            </ul>
+          </div>
+
+          {/* Contact Section */}
+          <div>
+            <h4 className="text-lg font-bold text-white mb-6 uppercase tracking-wider">Get In Touch</h4>
+            <ul className="space-y-5 text-neutral-content/70">
+              <li className="flex items-start gap-4">
+                <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center shrink-0">
+                  <FaMapMarkerAlt className="text-primary text-lg" />
+                </div>
+                <span>Hathazari, Chattogram, Bangladesh</span>
+              </li>
+              <li className="flex items-center gap-4">
+                <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center shrink-0">
+                  <FaPhoneAlt className="text-primary text-lg" />
+                </div>
+                <span>+880 1XXXXXXXXX</span>
+              </li>
+              <li className="flex items-center gap-4">
+                <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center shrink-0">
+                  <FaEnvelope className="text-primary text-lg" />
+                </div>
+                <span className="truncate">support@gadgetify.com</span>
+              </li>
+            </ul>
+          </div>
         </div>
-      </nav>
+
+        {/* Divider */}
+        <div className="w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent mb-8"></div>
+
+        {/* Bottom Bar */}
+        <div className="flex flex-col md:flex-row justify-between items-center gap-6 text-sm text-neutral-content/50">
+          <p>© {new Date().getFullYear()} GADGETIFY Industries Ltd. All rights reserved.</p>
+          <div className="flex gap-8">
+            <Link href="#" className="hover:text-white transition-colors">Safety</Link>
+            <Link href="#" className="hover:text-white transition-colors">Sitemap</Link>
+            <Link href="#" className="hover:text-white transition-colors">Help</Link>
+          </div>
+        </div>
+      </div>
     </footer>
   );
 };
