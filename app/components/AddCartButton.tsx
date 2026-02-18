@@ -7,15 +7,17 @@ const AddCartButton = ({
   productId,
   name,
   price,
+  className = "",
 }: {
   productId: string;
   name: string;
   price: number;
+  className?: string;
 }) => {
   const { cartStatus, setCartStatus } = useCartContext();
   return (
     <button
-      className="btn btn-primary my-3"
+      className={`btn btn-primary ${className}`}
       onClick={() => {
         toast.loading("add to cart...");
         fetch(
@@ -25,23 +27,21 @@ const AddCartButton = ({
           .then((jData) => {
             toast.dismiss();
             if (jData.success) {
-              let prevCart = cartStatus;
-              let isMatch;
-              isMatch = cartStatus.findIndex(
+              const itemIndex = cartStatus.findIndex(
                 (cart) => cart.productId === productId
               );
-              console.log("Match", isMatch);
-              if (isMatch >= 0) {
-                prevCart[isMatch] = {
-                  productId: productId,
-                  productName: name,
-                  productPrice: price,
-                  productQuantity: prevCart[isMatch].productQuantity + 1,
-                };
-                console.log("prev cart in add button", prevCart);
-                setCartStatus(prevCart);
+
+              if (itemIndex >= 0) {
+                // Return a new array with the target item updated immutably
+                setCartStatus(prev => {
+                  const newCart = [...prev];
+                  newCart[itemIndex] = {
+                    ...newCart[itemIndex],
+                    productQuantity: newCart[itemIndex].productQuantity + 1,
+                  };
+                  return newCart;
+                });
               } else {
-                console.log("In the else block: ", cartStatus);
                 setCartStatus((pCart) => [
                   ...pCart,
                   {

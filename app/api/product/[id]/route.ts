@@ -1,16 +1,27 @@
 import { NextRequest, NextResponse } from "next/server";
-import { productSchema } from "../route";
-import prisma from "@/prisma/client";
+import { z } from "zod";
+import { prisma } from "@/lib/prisma";
 import { deleteFiles, fileToUrl } from "../../utils/files";
 import ApiError from "@/app/api/utils/ApiError";
 import ApiResponse from "@/app/api/utils/ApiResponse";
 
+const productSchema: any = z.object({
+  name: z.string(),
+  price: z.number().min(1),
+  description: z.string().max(1000),
+  images: z.array(z.string()),
+  stockQuantity: z.number(),
+  code: z.number(),
+  category: z.string(),
+});
+
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params;
   const product = await prisma.product.findUnique({
-    where: { id: params.id },
+    where: { id },
   });
 
   if (!product) {
@@ -24,14 +35,15 @@ export async function GET(
 
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params;
   const data = await req.formData();
   const files: any = data.getAll("images");
 
   const prevData = await prisma.product.findUnique({
     where: {
-      id: params.id,
+      id,
     },
   });
 
@@ -40,13 +52,19 @@ export async function PUT(
   if (files[0] && files && files[0].size > 1) {
     try {
       await deleteFiles(images); // deleting the previous files
-    } catch {
-      throw new ApiError(420, "There have a problem to delete previous images");
+    } catch (e: any) {
+      return NextResponse.json(
+        new ApiError(420, e.message || "There have a problem to delete previous images"),
+        { status: 420 }
+      );
     }
     try {
       images = await fileToUrl(files);
-    } catch {
-      throw new ApiError(404, "There have a problem to upload on cloudinary");
+    } catch (e: any) {
+      return NextResponse.json(
+        new ApiError(404, e.message || "There have a problem to upload on cloudinary"),
+        { status: 404 }
+      );
     }
   }
   const body = {
@@ -66,11 +84,13 @@ export async function PUT(
 
   try {
     await prisma.product.update({
-      where: { id: params.id },
+      where: { id },
       data: validatedData.data,
     });
-  } catch {
-    throw new ApiError(404, "Product not found");
+  } catch (e: any) {
+    return NextResponse.json(new ApiError(404, e.message || "Product not found"), {
+      status: 404,
+    });
   }
 
   return NextResponse.json(
@@ -80,11 +100,12 @@ export async function PUT(
 
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params;
   const prevData = await prisma.product.findFirst({
     where: {
-      id: params.id,
+      id,
     },
   });
 
@@ -93,11 +114,13 @@ export async function DELETE(
   await deleteFiles(images); // deleting the previous files
 
   const product = await prisma.product.delete({
-    where: { id: params.id },
+    where: { id },
   });
 
   if (!product || !prevData) {
-    throw new ApiError(400, "Your product can't be deleted");
+    return NextResponse.json(new ApiError(400, "Your product can't be deleted"), {
+      status: 400,
+    });
   }
 
   return NextResponse.json(

@@ -1,59 +1,101 @@
 import { NextRequest, NextResponse } from "next/server";
-import prisma from "@/prisma/client";
+import { prisma } from "@/lib/prisma";
 import ApiError from "../../utils/ApiError";
-import jwt from "jsonwebtoken";
 import ApiResponse from "../../utils/ApiResponse";
 import bcryptjs from "bcryptjs";
-import generateToken from "@/app/api/utils/GenerateToken";
+import generateToken, { getTokenData } from "@/app/api/utils/Token";
 
 export async function POST(req: NextRequest) {
   try {
-    const data = await req.formData();
-    const phone: string = String(data.get("phone"));
-    const password = String(data.get("password"));
+    const body = await req.json();
+    const identifier = String(body.identifier || ""); // Can be phone or email
+    const password = String(body.password || "");
 
-    // Check if the use existence
-    const user = await prisma.user.findUnique({
+    if (!identifier || !password) {
+      return NextResponse.json(new ApiError(400, "Phone/Email and password are required"), { status: 400 });
+    }
+
+    const user = await prisma.user.findFirst({
       where: {
-        phone,
+        OR: [
+          { phone: identifier },
+          { email: identifier },
+        ],
       },
     });
-    if (!user)
+
+    if (!user) {
       return NextResponse.json(
-        new ApiError(400, "There have no user with this number"),
-        {
-          status: 400,
-        }
+        new ApiError(400, "User not found"),
+        { status: 400 }
       );
-    //create token data
+    }
+
+    const validPassword = await bcryptjs.compare(password, user.password);
+    if (!validPassword) {
+      return NextResponse.json(
+        new ApiError(401, "Invalid password"),
+        { status: 401 }
+      );
+    }
+
+    // Generate JWT
     const tokenData = {
       id: user.id,
-      images: user.images,
+      name: user.name,
+      phone: user.phone,
+      email: user.email,
+      address: user.address,
       isAdmin: user.isAdmin,
     };
 
     const token = generateToken(tokenData);
-    // password checking
-    const validPassword = await bcryptjs.compare(password, user.password);
-    if (!validPassword)
-      return NextResponse.json(
-        new ApiError(401, "Password did not matched with this phone number"),
-        { status: 401 }
-      );
+
+    // Merge Cart Logic
+    const guestCartToken = req.cookies.get("cartToken")?.value;
+    let finalCart = user.cart; // Saved in DB
+
+    if (guestCartToken) {
+      try {
+        const guestCart = getTokenData(guestCartToken);
+        const { mergeCarts } = await import("../../utils/cartRegistry");
+        finalCart = mergeCarts(finalCart, guestCart);
+
+        // Save merged cart back to DB
+        await prisma.user.update({
+          where: { id: user.id },
+          data: { cart: finalCart as any }
+        });
+      } catch (e) {
+        console.error("Cart merge error during login:", e);
+      }
+    }
 
     const res = NextResponse.json(
-      new ApiResponse(200, user, "Login Successfully"),
-      {
-        status: 200,
-      }
+      new ApiResponse(200, tokenData, "Login Successful"),
+      { status: 200 }
     );
 
     res.cookies.set("token", token, {
       httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      maxAge: 60 * 60 * 24 * 30, // 30 days
+      path: "/",
     });
+
+    // Set merged cart token
+    if (finalCart) {
+      const cartToken = generateToken(finalCart);
+      res.cookies.set("cartToken", cartToken, {
+        httpOnly: false,
+        maxAge: 60 * 60 * 24 * 30,
+        path: "/",
+      });
+    }
+
     return res;
   } catch (error: any) {
-    return NextResponse.json(new ApiError(500, error.message, error), {
+    return NextResponse.json(new ApiError(500, error.message), {
       status: 500,
     });
   }

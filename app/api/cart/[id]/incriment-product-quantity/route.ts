@@ -1,12 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
-import ApiError from "@/app/api/utils/ApiError.js";
-import ApiResponse from "@/app/api/utils/ApiResponse.js";
-import generateToken, { getTokenData } from "@/app/api/utils/Token.js";
+import ApiError from "@/app/api/utils/ApiError";
+import ApiResponse from "@/app/api/utils/ApiResponse";
+import generateToken, { getTokenData } from "@/app/api/utils/Token";
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params;
   const searchParams = req.nextUrl.searchParams;
   const name = searchParams.get("name");
   const price = searchParams.get("price");
@@ -22,19 +23,19 @@ export async function GET(
   if (cartTokenData?.productId && cartTokenData.productId?.length > 0) {
     delete cartTokenData.exp;
     const existIndex = await cartTokenData.productId.findIndex(
-      (cartId: string) => cartId === params.id
+      (cartId: string) => cartId === id
     );
     if (existIndex >= 0) {
       cartTokenData.productQuantity[existIndex] += 1;
     } else {
-      cartTokenData.productId.push(params.id);
+      cartTokenData.productId.push(id);
       cartTokenData.productName.push(name);
       cartTokenData.productPrice.push(price);
       cartTokenData.productQuantity.push(1);
     }
   } else {
     cartTokenData = {
-      productId: [params.id],
+      productId: [id],
       productName: [name],
       productPrice: [price],
       productQuantity: [1],

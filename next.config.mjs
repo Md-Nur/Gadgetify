@@ -8,11 +8,15 @@ const nextConfig = {
         // port: "",
         // pathname: "/account123/**",
       },
+      {
+        protocol: "https",
+        hostname: "i.ibb.co",
+      },
     ],
   },
   typescript: {
-    ignoreBuildErrors: true,
+    ignoreBuildErrors: false,
   },
 };
 
-module.exports = nextConfig;
+export default nextConfig;

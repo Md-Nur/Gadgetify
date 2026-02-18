@@ -9,7 +9,10 @@ import {
   useEffect,
 } from "react";
 interface UserProps {
-  id: number;
+  id: string;
+  name: string;
+  phone: string;
+  address: string;
   images: string;
   isAdmin: boolean;
 }
@@ -20,16 +23,22 @@ interface UserContextProps {
 
 const UserContext = createContext<UserContextProps>({
   userAuth: {
-    id: 0,
+    id: "",
+    name: "",
+    phone: "",
+    address: "",
     images: "",
     isAdmin: false,
   },
-  setUserAuth: () => {},
+  setUserAuth: () => { },
 });
 
 export const UserAuthProvider = ({ children }: { children: ReactNode }) => {
   const [userAuth, setUserAuth] = useState<UserProps>({
-    id: 0,
+    id: "",
+    name: "",
+    phone: "",
+    address: "",
     images: "",
     isAdmin: false,
   });
@@ -37,23 +46,18 @@ export const UserAuthProvider = ({ children }: { children: ReactNode }) => {
     fetch("/api/users/me")
       .then((res) => res.json())
       .then((jData) => {
-        if (jData.success) setUserAuth(jData.data);
-      })
-      .then(() => {
-        if (userAuth.id > 0) {
-          fetch(`/api/users/${userAuth.id}`)
-            .then((res) => res.json())
-            .then((jdata) => {
-              if (jdata.success) {
-                setUserAuth({
-                  id: 0,
-                  images: "",
-                  isAdmin: false,
-                });
-              }
-            });
+        if (jData.success) {
+          setUserAuth({
+            id: jData.data.id,
+            name: jData.data.name || "",
+            phone: jData.data.phone || "",
+            address: jData.data.address || "",
+            images: jData.data.images,
+            isAdmin: jData.data.isAdmin,
+          });
         }
-      });
+      })
+      .catch((err) => console.error("Error fetching user session:", err));
   }, []);
   return (
     <UserContext.Provider value={{ userAuth, setUserAuth }}>

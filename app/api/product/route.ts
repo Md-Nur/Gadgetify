@@ -1,33 +1,40 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import prisma from "@/prisma/client";
+import { prisma } from "@/lib/prisma";
 import { fileToUrl } from "@/app/api/utils/files";
 import ApiError from "@/app/api/utils/ApiError";
 import ApiResponse from "@/app/api/utils/ApiResponse";
 
-export const productSchema: any = z.object({
+const productSchema: any = z.object({
   name: z.string(),
   price: z.number().min(1),
   description: z.string().max(1000),
   images: z.array(z.string()),
   stockQuantity: z.number(),
-  code: z.number(),
   category: z.string(),
+  subCategory: z.string().optional(),
+  brand: z.string().optional(),
 });
 
 export async function POST(req: NextRequest) {
   const data = await req.formData();
-  const files: any = data.getAll("images");
-  const images = await fileToUrl(files);
 
-  if (!images || images.length < 1) {
-    return NextResponse.json(new ApiError(404, "Images are required"), {
-      status: 404,
-    });
+  // Handle pre-uploaded image URLs from frontend
+  const imageUrls = data.getAll("imageUrls") as string[];
+  let images: string[] = [];
+
+  if (imageUrls && imageUrls.length > 0) {
+    images = imageUrls;
+  } else {
+    // Fallback to manual file upload if no URLs provided
+    const files: any = data.getAll("images");
+    if (files && files.length > 0) {
+      images = await fileToUrl(files);
+    }
   }
 
-  if (!data.get("code")) {
-    return NextResponse.json(new ApiError(404, "Product code is required"), {
+  if (images.length < 1) {
+    return NextResponse.json(new ApiError(404, "At least one image is required"), {
       status: 404,
     });
   }
@@ -37,22 +44,11 @@ export async function POST(req: NextRequest) {
     price: Number(data.get("price")),
     description: data.get("description"),
     images: images,
-    code: Number(data.get("code")),
     category: data.get("category") || "",
+    subCategory: data.get("subCategory") || "",
+    brand: data.get("brand") || "",
     stockQuantity: Number(data.get("stockQuantity")),
   };
-
-  // check the product code is already in the database
-  const prevProduct = await prisma.product.findFirst({
-    where: {
-      code: body.code,
-    },
-  });
-  if (prevProduct) {
-    return NextResponse.json(new ApiError(400, "Product code already exists"), {
-      status: 400,
-    });
-  }
 
   const validatedData = productSchema.safeParse(body);
   if (!validatedData.success) {
@@ -90,11 +86,37 @@ export async function POST(req: NextRequest) {
   );
 }
 
-export async function GET() {
-  const products = await prisma.product.findMany({});
-  if (!products)
-    return NextResponse.json(new ApiError(404, "There have no products"), {
+export async function GET(req: NextRequest) {
+  const { searchParams } = new URL(req.url);
+  const category = searchParams.get("category");
+  const query = searchParams.get("q");
+
+  let products;
+  try {
+    if (category) {
+      products = await prisma.product.findMany({
+        where: { category: category },
+      });
+    } else if (query) {
+      products = await prisma.product.findMany({
+        where: {
+          OR: [
+            { name: { contains: query, mode: "insensitive" } },
+            { description: { contains: query, mode: "insensitive" } },
+          ],
+        },
+      });
+    } else {
+      products = await prisma.product.findMany({});
+    }
+  } catch (error: any) {
+    return NextResponse.json(new ApiError(500, error.message), { status: 500 });
+  }
+
+  if (!products || products.length === 0) {
+    return NextResponse.json(new ApiError(404, "No products found"), {
       status: 404,
     });
+  }
   return NextResponse.json(new ApiResponse(200, products), { status: 200 });
 }

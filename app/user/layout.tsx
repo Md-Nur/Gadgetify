@@ -1,15 +1,14 @@
+"use client";
 import { ReactNode } from "react";
-import Sidebar from "@/components/Sidebar";
+import Drawer from "@/app/components/Drawer";
 
 const layout = ({ children }: { children: ReactNode }) => {
   return (
-    <main className="flex flex-col w-full lg:flex-row">
-      <div className="grid flex-grow card place-items-center">{children}</div>
-      <div className="divider lg:divider-horizontal"></div>
-      <aside className="hidden lg:grid flex-grow card place-items-center">
-        <Sidebar />
-      </aside>
-    </main>
+    <Drawer>
+      <main className="flex flex-col w-full lg:flex-row min-h-screen">
+        <div className="flex-grow p-4">{children}</div>
+      </main>
+    </Drawer>
   );
 };
 

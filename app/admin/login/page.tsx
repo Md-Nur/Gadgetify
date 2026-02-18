@@ -1,10 +1,10 @@
 "use client";
-import { useAdminAuth } from "@/app/context/userContext";
+import { useUserAuth } from "@/app/context/userContext";
 import React from "react";
 
 const Login = () => {
-  const { setAdminAuthStatus } = useAdminAuth();
-  return <div>Login</div>;
+  const { userAuth, setUserAuth } = useUserAuth();
+  return <div>Login {userAuth.isAdmin ? "(Admin)" : "(User)"}</div>;
 };
 
 export default Login;
