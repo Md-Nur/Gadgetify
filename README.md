@@ -1,36 +1,94 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# 🛒 Gadgetify - Modern Tech E-commerce Platform
 
-## Getting Started
+[![Next.js](https://img.shields.io/badge/Next.js-15-black?style=flat-square&logo=next.js)](https://nextjs.org/)
+[![Prisma](https://img.shields.io/badge/Prisma-ORM-2D3748?style=flat-square&logo=prisma)](https://www.prisma.io/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.0-38B2AC?style=flat-square&logo=tailwind-css)](https://tailwindcss.com/)
+[![DaisyUI](https://img.shields.io/badge/daisyUI-5.0-55AD9B?style=flat-square)](https://daisyui.com/)
+[![Bun](https://img.shields.io/badge/Bun-Runtime-000000?style=flat-square&logo=bun)](https://bun.sh/)
 
-First, run the development server:
+Gadgetify is a premium, high-performance e-commerce platform built for gadget enthusiasts. It features a sleek, tech-inspired design with a seamless user experience, powered by the latest web technologies.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## 🚀 Key Features
+
+- **💎 Premium UX/UI**: Beautiful, responsive design using Tailwind CSS 4 and DaisyUI 5 with glassmorphism effects and smooth animations.
+- **🔐 Secure Authentication**: Multi-layered security using JWT and Bcryptjs for user and admin authentication.
+- **⚡ Eager Image Upload**: Profile pictures are uploaded to ImgBB instantly during signup to minimize registration time.
+- **📦 Advanced Cart System**: Persistent guest cart that intelligently merges with the user's account upon login.
+- **🔍 Dedicated Order Tracking**: Search and track orders in real-time with a clean, dedicated tracking interface.
+- **🛠️ Admin Dashboard**: Robust management system for products, orders, and user accounts.
+- **🛠️ Secured DB Connections**: Explicitly configured PostgreSQL SSL modes for maximum security and stability.
+
+## 🛠️ Tech Stack
+
+- **Framework**: [Next.js 15+](https://nextjs.org/) (App Router)
+- **Runtime**: [Bun](https://bun.sh/)
+- **Language**: [TypeScript](https://www.typescriptlang.org/)
+- **Database**: [PostgreSQL](https://www.postgresql.org/) (Hosted on [Neon](https://neon.tech/))
+- **ORM**: [Prisma](https://www.prisma.io/)
+- **Styling**: [Tailwind CSS 4](https://tailwindcss.com/), [DaisyUI 5](https://daisyui.com/)
+- **Image Hosting**: [ImgBB API](https://imgbb.com/)
+- **State Management**: React Context API (Cart & Auth)
+
+## 🏁 Getting Started
+
+### Prerequisites
+
+- [Bun](https://bun.sh/docs/installation) installed on your machine.
+- A PostgreSQL database (Neon recommended).
+- An ImgBB API key.
+
+### Installation
+
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/Md-Nur/Gadgetify.git
+   cd Gadgetify
+   ```
+
+2. **Install dependencies:**
+   ```bash
+   bun install
+   ```
+
+3. **Environment Setup:**
+   Create a `.env` file in the root directory and add your credentials:
+   ```env
+   DATABASE_URL="postgresql://user:password@host/dbname?sslmode=verify-full"
+   JWT_SECRET_TOKEN="your_jwt_secret"
+   IMGBB_API="your_imgbb_api_key"
+   ```
+
+4. **Database Setup:**
+   ```bash
+   bun --bun prisma db push
+   ```
+
+5. **Run the Development Server:**
+   ```bash
+   bun dev
+   ```
+   Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+## 📁 Project Structure
+
+```text
+├── app/                  # Next.js App Router
+│   ├── admin/            # Admin dashboard routes
+│   ├── api/              # Backend API routes
+│   ├── components/       # Reusable UI components
+│   ├── context/          # Auth & Cart contexts
+│   ├── user/             # User profile & auth routes
+│   └── track-order/      # New dedicated tracking page
+├── generated/            # Prisma generated client
+├── lib/                  # Library configurations (Prisma)
+├── public/               # Static assets
+└── prisma/               # Database schema & migrations
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 📄 License
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Distributed under the MIT License. See `LICENSE` for more information.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+---
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Built with 💙 by **Nur** and the **Gadgetify** team.

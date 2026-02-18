@@ -21,12 +21,39 @@ const Signup = () => {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadedImageUrl, setUploadedImageUrl] = useState<string | null>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData((prev) => ({
       ...prev,
       [e.target.name]: e.target.value,
     }));
+  };
+
+  const uploadImage = async (file: File) => {
+    setIsUploading(true);
+    try {
+      const uploadData = new FormData();
+      uploadData.append("image", file);
+
+      const response = await fetch("/api/upload/image", {
+        method: "POST",
+        body: uploadData,
+      });
+
+      const result = await response.json();
+      if (result.success && result.data?.url) {
+        setUploadedImageUrl(result.data.url);
+      } else {
+        toast.error(result.message || "Image upload failed. It will be uploaded during signup.");
+      }
+    } catch (error) {
+      console.error("Image upload error:", error);
+      toast.error("Image upload failed. It will be uploaded during signup.");
+    } finally {
+      setIsUploading(false);
+    }
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -38,6 +65,7 @@ const Signup = () => {
         setImagePreview(reader.result as string);
       };
       reader.readAsDataURL(file);
+      uploadImage(file);
     }
   };
 
@@ -62,12 +90,14 @@ const Signup = () => {
         setImagePreview(reader.result as string);
       };
       reader.readAsDataURL(file);
+      uploadImage(file);
     }
   };
 
   const removeImage = () => {
     setProfileImage(null);
     setImagePreview(null);
+    setUploadedImageUrl(null);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -93,7 +123,9 @@ const Signup = () => {
       formDataToSend.append("password", formData.password);
       formDataToSend.append("address", formData.address);
 
-      if (profileImage) {
+      if (uploadedImageUrl) {
+        formDataToSend.append("images", uploadedImageUrl);
+      } else if (profileImage) {
         formDataToSend.append("images", profileImage);
       }
 
@@ -320,26 +352,35 @@ const Signup = () => {
                     <img
                       src={imagePreview}
                       alt="Profile Preview"
-                      className="w-full h-full object-cover"
+                      className={`w-full h-full object-cover transition-opacity duration-300 ${isUploading ? "opacity-30" : "opacity-100"}`}
                     />
-                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
-                      <button
-                        type="button"
-                        onClick={() => document.getElementById("file-upload")?.click()}
-                        className="btn btn-circle btn-sm btn-ghost text-white hover:bg-white/20"
-                        title="Change Image"
-                      >
-                        <FaCloudUploadAlt className="w-5 h-5" />
-                      </button>
-                      <button
-                        type="button"
-                        onClick={removeImage}
-                        className="btn btn-circle btn-sm btn-ghost text-error hover:bg-white/20"
-                        title="Remove Image"
-                      >
-                        <FaTrash className="w-4 h-4" />
-                      </button>
-                    </div>
+
+                    {isUploading && (
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <span className="loading loading-spinner loading-md text-primary"></span>
+                      </div>
+                    )}
+
+                    {!isUploading && (
+                      <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                        <button
+                          type="button"
+                          onClick={() => document.getElementById("file-upload")?.click()}
+                          className="btn btn-circle btn-sm btn-ghost text-white hover:bg-white/20"
+                          title="Change Image"
+                        >
+                          <FaCloudUploadAlt className="w-5 h-5" />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={removeImage}
+                          className="btn btn-circle btn-sm btn-ghost text-error hover:bg-white/20"
+                          title="Remove Image"
+                        >
+                          <FaTrash className="w-4 h-4" />
+                        </button>
+                      </div>
+                    )}
                     {/* Hidden input to keep it working if they click change */}
                     <input
                       type="file"
@@ -356,10 +397,15 @@ const Signup = () => {
               <button
                 type="submit"
                 className="btn btn-primary w-full mt-4 gap-2"
-                disabled={isSubmitting}
+                disabled={isSubmitting || isUploading}
               >
                 {isSubmitting ? (
                   <span className="loading loading-spinner"></span>
+                ) : isUploading ? (
+                  <>
+                    <span className="loading loading-spinner loading-xs"></span>
+                    Uploading Image...
+                  </>
                 ) : (
                   <>
                     <FaCheckCircle />

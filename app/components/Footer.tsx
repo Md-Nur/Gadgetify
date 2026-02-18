@@ -67,7 +67,7 @@ const Footer = () => {
             <h4 className="text-lg font-bold text-white mb-6 uppercase tracking-wider">Customer Care</h4>
             <ul className="space-y-4 text-neutral-content/70">
               <li><Link href="/cart" className="hover:text-primary transition-colors">My Cart</Link></li>
-              <li><Link href="/order-form" className="hover:text-primary transition-colors">Track Order</Link></li>
+              <li><Link href="/track-order" className="hover:text-primary transition-colors">Track Order</Link></li>
               <li><Link href="#" className="hover:text-primary transition-colors">Privacy Policy</Link></li>
               <li><Link href="#" className="hover:text-primary transition-colors">Terms & Conditions</Link></li>
               <li className="pt-2">
@@ -84,13 +84,13 @@ const Footer = () => {
                 <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center shrink-0">
                   <FaMapMarkerAlt className="text-primary text-lg" />
                 </div>
-                <span>Hathazari, Chattogram, Bangladesh</span>
+                <span>Mirpur, Dhaka, Bangladesh</span>
               </li>
               <li className="flex items-center gap-4">
                 <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center shrink-0">
                   <FaPhoneAlt className="text-primary text-lg" />
                 </div>
-                <span>+880 1XXXXXXXXX</span>
+                <span>+880 01770171779</span>
               </li>
               <li className="flex items-center gap-4">
                 <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center shrink-0">

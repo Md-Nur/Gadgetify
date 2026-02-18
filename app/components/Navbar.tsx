@@ -218,7 +218,7 @@ const Navbar = () => {
                   <Link href={`/user/update/${userAuth.id}`} className="py-2.5 rounded-lg hover:bg-primary/10">Account Settings</Link>
                 </li>
                 <li>
-                  <Link href="/user/profile" className="py-2.5 rounded-lg hover:bg-primary/10 group flex items-center justify-between">
+                  <Link href="/track-order" className="py-2.5 rounded-lg hover:bg-primary/10 group flex items-center justify-between">
                     Track Order
                     <span className="badge badge-primary badge-xs badge-outline group-hover:bg-primary group-hover:text-white transition-colors">New</span>
                   </Link>
