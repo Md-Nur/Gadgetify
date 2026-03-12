@@ -1,10 +1,18 @@
+"use client";
+
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import Logo from "../../public/images/logo.png";
 import { FaFacebookF, FaTwitter, FaInstagram, FaYoutube, FaEnvelope, FaPhoneAlt, FaMapMarkerAlt } from "react-icons/fa";
+import { usePathname } from "next/navigation";
 
 const Footer = () => {
+  const pathname = usePathname();
+  const isAdminPage = pathname?.startsWith("/admin");
+
+  if (isAdminPage) return null;
+
   return (
     <footer className="bg-neutral text-neutral-content pt-16 pb-8 border-t border-primary/10 relative overflow-hidden">
       {/* Background decoration */}
