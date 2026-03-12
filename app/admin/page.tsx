@@ -73,7 +73,7 @@ const Admin = async () => {
       <h2 className="text-2xl font-bold mt-12 mb-6">দ্রুত অ্যাকশন</h2>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* Products Management */}
-        <Link href="/admin/add-product" className="card bg-base-200 hover:bg-base-300 transition-all hover:-translate-y-1 shadow-sm hover:shadow-md border border-base-300">
+        <Link href="/admin/products" className="card bg-base-200 hover:bg-base-300 transition-all hover:-translate-y-1 shadow-sm hover:shadow-md border border-base-300">
           <div className="card-body">
             <div className="flex items-center gap-4">
               <div className="bg-primary/10 text-primary p-4 rounded-xl">

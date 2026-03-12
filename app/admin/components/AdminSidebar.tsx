@@ -27,7 +27,7 @@ const AdminSidebar = () => {
     },
     {
       name: "পণ্য ব্যবস্থাপনা",
-      href: "/admin/add-product",
+      href: "/admin/products",
       icon: <FaBox className="w-5 h-5" />,
     },
     {
