@@ -102,7 +102,7 @@ const Profile = async () => {
 
                 <div>
                   <p className="text-xs text-base-content/50 uppercase font-semibold">Email</p>
-                  <p className="font-medium text-lg">{user.email || "N/A"}</p>
+                  <p className="font-medium text-lg break-words">{user.email || "N/A"}</p>
                 </div>
 
                 <div>
