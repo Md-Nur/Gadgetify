@@ -165,7 +165,11 @@ const Navbar = () => {
                     Subtotal: <span className="text-primary font-bold">Tk. {totalPrice}</span>
                   </p>
                   <div className="card-actions">
-                    <Link href="/cart" className="btn btn-primary btn-block shadow-lg hover:shadow-primary/30 rounded-xl transition-all">
+                    <Link
+                      href="/cart"
+                      className="btn btn-primary btn-block shadow-lg hover:shadow-primary/30 rounded-xl transition-all"
+                      onClick={() => (document.activeElement as HTMLElement)?.blur()}
+                    >
                       View Cart & Checkout
                     </Link>
                   </div>
@@ -173,7 +177,11 @@ const Navbar = () => {
               ) : (
                 <div className="text-center py-4 text-pretty">
                   <p className="font-bold text-base-content/40 mb-3">Your cart is empty</p>
-                  <Link href="/" className="btn btn-primary btn-sm btn-block rounded-lg">
+                  <Link
+                    href="/"
+                    className="btn btn-primary btn-sm btn-block rounded-lg"
+                    onClick={() => (document.activeElement as HTMLElement)?.blur()}
+                  >
                     Shop Now
                   </Link>
                 </div>
@@ -205,20 +213,40 @@ const Navbar = () => {
               <>
                 <li className="menu-title px-4 py-3 text-xs uppercase tracking-widest opacity-40 font-bold">Account Overview</li>
                 <li>
-                  <Link href="/user/profile" className="py-2.5 rounded-lg hover:bg-primary/10">My Profile</Link>
+                  <Link
+                    href="/user/profile"
+                    className="py-2.5 rounded-lg hover:bg-primary/10"
+                    onClick={() => (document.activeElement as HTMLElement)?.blur()}
+                  >
+                    My Profile
+                  </Link>
                 </li>
                 {userAuth.isAdmin && (
                   <li>
-                    <Link href="/admin" className="text-primary font-bold py-2.5 rounded-lg hover:bg-primary/10">
+                    <Link
+                      href="/admin"
+                      className="text-primary font-bold py-2.5 rounded-lg hover:bg-primary/10"
+                      onClick={() => (document.activeElement as HTMLElement)?.blur()}
+                    >
                       <FaThList className="inline-block mr-2" /> Admin Dashboard
                     </Link>
                   </li>
                 )}
                 <li>
-                  <Link href={`/user/update/${userAuth.id}`} className="py-2.5 rounded-lg hover:bg-primary/10">Account Settings</Link>
+                  <Link
+                    href={`/user/update/${userAuth.id}`}
+                    className="py-2.5 rounded-lg hover:bg-primary/10"
+                    onClick={() => (document.activeElement as HTMLElement)?.blur()}
+                  >
+                    Account Settings
+                  </Link>
                 </li>
                 <li>
-                  <Link href="/track-order" className="py-2.5 rounded-lg hover:bg-primary/10 group flex items-center justify-between">
+                  <Link
+                    href="/track-order"
+                    className="py-2.5 rounded-lg hover:bg-primary/10 group flex items-center justify-between"
+                    onClick={() => (document.activeElement as HTMLElement)?.blur()}
+                  >
                     Track Order
                     <span className="badge badge-primary badge-xs badge-outline group-hover:bg-primary group-hover:text-white transition-colors">New</span>
                   </Link>
@@ -239,10 +267,22 @@ const Navbar = () => {
             ) : (
               <>
                 <li>
-                  <Link href="/user/login" className="font-bold text-primary py-3 rounded-xl hover:bg-primary/10 text-center block mb-2">Login</Link>
+                  <Link
+                    href="/user/login"
+                    className="font-bold text-primary py-3 rounded-xl hover:bg-primary/10 text-center block mb-2"
+                    onClick={() => (document.activeElement as HTMLElement)?.blur()}
+                  >
+                    Login
+                  </Link>
                 </li>
                 <li>
-                  <Link href="/user/signin" className="btn btn-outline btn-primary btn-sm rounded-xl py-2">Create Account</Link>
+                  <Link
+                    href="/user/signin"
+                    className="btn btn-outline btn-primary btn-sm rounded-xl py-2"
+                    onClick={() => (document.activeElement as HTMLElement)?.blur()}
+                  >
+                    Create Account
+                  </Link>
                 </li>
               </>
             )}
