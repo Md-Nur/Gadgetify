@@ -11,8 +11,9 @@ const Page = async ({ params }: { params: Promise<{ id: string }> }) => {
 
   if (!product)
     return (
-      <div className="h-screen flex justify-center items-center">
-        <span className=" loading loading-bars loading-lg"></span>
+      <div className="min-h-[60vh] flex flex-col justify-center items-center gap-4">
+        <span className="loading loading-spinner loading-lg text-primary"></span>
+        <p className="text-base-content/60 font-medium">পণ্যের তথ্য লোড হচ্ছে...</p>
       </div>
     );
 

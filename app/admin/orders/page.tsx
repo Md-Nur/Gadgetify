@@ -41,27 +41,28 @@ const AdminOrders = () => {
                 setError(result.message);
             }
         } catch (err) {
-            setError("Failed to fetch orders");
+            setError("অর্ডার তথ্য আনতে ব্যর্থ হয়েছে");
         } finally {
             setLoading(false);
         }
     };
 
-    const getStatusBadge = (status: string) => {
-        const statusColors: { [key: string]: string } = {
-            Pending: "badge-warning",
-            Processing: "badge-info",
-            Shipped: "badge-primary",
-            Delivered: "badge-success",
-            Cancelled: "badge-error",
-        };
-        return `badge ${statusColors[status] || "badge-neutral"}`;
+    const statusMap: { [key: string]: { label: string; color: string } } = {
+        Pending: { label: "অপেক্ষমান", color: "badge-warning" },
+        Processing: { label: "প্রক্রিয়াধীন", color: "badge-info" },
+        Shipped: { label: "পাঠানো হয়েছে", color: "badge-primary" },
+        Delivered: { label: "পৌঁছেছে", color: "badge-success" },
+        Cancelled: { label: "বাতিল", color: "badge-error" },
+    };
+
+    const getStatusInfo = (status: string) => {
+        return statusMap[status] || { label: status, color: "badge-neutral" };
     };
 
     if (loading) {
         return (
-            <div className="flex justify-center items-center min-h-screen">
-                <span className="loading loading-spinner loading-lg"></span>
+            <div className="flex justify-center items-center min-h-[60vh]">
+                <span className="loading loading-spinner loading-lg text-primary"></span>
             </div>
         );
     }
@@ -77,66 +78,73 @@ const AdminOrders = () => {
     }
 
     return (
-        <div className="max-w-7xl mx-auto py-12 px-4">
-            <div className="flex justify-between items-center mb-8">
-                <div className="flex flex-col gap-2">
-                    <Link href="/admin" className="btn btn-sm btn-ghost w-fit gap-2 pl-0 hover:bg-transparent">
-                        ← Back to Dashboard
-                    </Link>
-                    <h1 className="text-3xl font-bold">Orders Management</h1>
+        <div className="max-w-7xl mx-auto">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
+                <div>
+                    <h1 className="text-3xl font-bold">অর্ডার ব্যবস্থাপনা</h1>
+                    <p className="text-base-content/60 mt-1">সব গ্রাহকের অর্ডার এখানে দেখুন।</p>
                 </div>
-                <div className="stats shadow">
-                    <div className="stat">
-                        <div className="stat-title">Total Orders</div>
+                <div className="stats shadow bg-base-200">
+                    <div className="stat px-8">
+                        <div className="stat-title text-base-content/60">মোট অর্ডার</div>
                         <div className="stat-value text-primary">{orders.length}</div>
                     </div>
                 </div>
             </div>
 
             {orders.length === 0 ? (
-                <div className="text-center py-12">
-                    <h2 className="text-2xl font-semibold mb-4">No orders yet</h2>
-                    <p className="text-base-content/70">Orders will appear here when customers place them.</p>
+                <div className="text-center py-20 bg-base-200 rounded-3xl border-2 border-dashed border-base-300">
+                    <h2 className="text-2xl font-semibold mb-2">এখনও কোন অর্ডার নেই</h2>
+                    <p className="text-base-content/60">গ্রাহকরা অর্ডার করলে এখানে দেখা যাবে।</p>
                 </div>
             ) : (
-                <div className="overflow-x-auto bg-base-100 rounded-3xl shadow-sm border border-primary/5">
+                <div className="overflow-x-auto bg-base-100 rounded-3xl shadow-sm border border-base-300">
                     <table className="table table-zebra w-full">
                         <thead className="bg-base-200/50">
                             <tr>
-                                <th className="py-4">ID</th>
-                                <th className="py-4">Customer</th>
-                                <th className="py-4 hidden lg:table-cell">Phone</th>
-                                <th className="py-4 hidden sm:table-cell">Items</th>
-                                <th className="py-4">Total</th>
-                                <th className="py-4">Status</th>
-                                <th className="py-4 hidden xl:table-cell">Date</th>
-                                <th className="py-4 text-right">Actions</th>
+                                <th className="py-5 pl-6">আইডি</th>
+                                <th className="py-5">গ্রাহক</th>
+                                <th className="py-5 hidden lg:table-cell">ফোন</th>
+                                <th className="py-5 hidden sm:table-cell text-center">আইটেম</th>
+                                <th className="py-5 text-center">মোট</th>
+                                <th className="py-5 text-center">অবস্থা</th>
+                                <th className="py-5 hidden xl:table-cell">তারিখ</th>
+                                <th className="py-5 text-right pr-6">অ্যাকশন</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {orders.map((order) => (
-                                <tr key={order.id} className="hover:bg-base-200/30 transition-colors">
-                                    <td className="font-mono text-xs opacity-50">{order.id.slice(0, 6)}</td>
-                                    <td className="font-bold">{order.customerName}</td>
-                                    <td className="hidden lg:table-cell">{order.customerPhone}</td>
-                                    <td className="hidden sm:table-cell">{order.orderItems.length} items</td>
-                                    <td className="font-black text-primary">৳{order.totalAmount}</td>
-                                    <td>
-                                        <span className={`${getStatusBadge(order.status)} font-bold`}>
-                                            {order.status}
-                                        </span>
-                                    </td>
-                                    <td className="hidden xl:table-cell opacity-50 text-sm">{new Date(order.createdAt).toLocaleDateString()}</td>
-                                    <td className="text-right">
-                                        <Link
-                                            href={`/admin/orders/${order.id}`}
-                                            className="btn btn-sm btn-ghost hover:bg-primary/10 hover:text-primary transition-all"
-                                        >
-                                            View
-                                        </Link>
-                                    </td>
-                                </tr>
-                            ))}
+                            {orders.map((order) => {
+                                const statusInfo = getStatusInfo(order.status);
+                                return (
+                                    <tr key={order.id} className="hover:bg-base-200/30 transition-colors group">
+                                        <td className="pl-6 font-mono text-xs opacity-50">{order.id.slice(0, 6)}</td>
+                                        <td>
+                                            <div className="font-bold">{order.customerName}</div>
+                                        </td>
+                                        <td className="hidden lg:table-cell">{order.customerPhone}</td>
+                                        <td className="hidden sm:table-cell text-center">
+                                            <span className="badge badge-ghost">{order.orderItems.length} টি</span>
+                                        </td>
+                                        <td className="text-center">
+                                            <span className="font-bold text-primary">৳{order.totalAmount.toLocaleString()}</span>
+                                        </td>
+                                        <td className="text-center">
+                                            <span className={`badge ${statusInfo.color} badge-sm sm:badge-md font-bold`}>
+                                                {statusInfo.label}
+                                            </span>
+                                        </td>
+                                        <td className="hidden xl:table-cell opacity-50 text-sm">{new Date(order.createdAt).toLocaleDateString("bn-BD")}</td>
+                                        <td className="text-right pr-6">
+                                            <Link
+                                                href={`/admin/orders/${order.id}`}
+                                                className="btn btn-sm btn-ghost hover:bg-primary/10 hover:text-primary transition-all rounded-lg"
+                                            >
+                                                দেখুন
+                                            </Link>
+                                        </td>
+                                    </tr>
+                                );
+                            })}
                         </tbody>
                     </table>
                 </div>

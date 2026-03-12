@@ -71,7 +71,13 @@ const Footer = () => {
               <li><Link href="#" className="hover:text-primary transition-colors">Privacy Policy</Link></li>
               <li><Link href="#" className="hover:text-primary transition-colors">Terms & Conditions</Link></li>
               <li className="pt-2">
-                <div className="badge badge-primary badge-outline font-bold py-3 px-4">Delivery: ৳60 (Dhaka) | ৳130 (Outside)</div>
+                <div className="flex flex-col gap-3">
+                  <div className="text-white text-xs font-bold uppercase tracking-widest opacity-80">Delivery Fees:</div>
+                  <div className="flex flex-wrap gap-2">
+                    <div className="badge badge-primary badge-outline font-bold py-3 px-4 whitespace-nowrap border-primary/30 transition-all hover:bg-primary/10">৳60 (Dhaka)</div>
+                    <div className="badge badge-primary badge-outline font-bold py-3 px-4 whitespace-nowrap border-primary/30 transition-all hover:bg-primary/10">৳130 (Outside)</div>
+                  </div>
+                </div>
               </li>
             </ul>
           </div>

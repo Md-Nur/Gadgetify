@@ -115,7 +115,7 @@ const Forms: React.FC<Props> = ({
         {children}
         <div className="flex justify-evenly w-full flex-wrap mt-6">
           <button className="btn btn-primary px-8 rounded-lg" disabled={pending}>
-            <input type="submit" value={submitName || "submit"} className="cursor-pointer" />
+            <span className="cursor-pointer">{submitName || "সাবমিট"}</span>
             {pending && (
               <span className="loading loading-spinner loading-md ml-2"></span>
             )}
@@ -123,7 +123,7 @@ const Forms: React.FC<Props> = ({
           <input
             type="reset"
             className="btn btn-outline px-8 rounded-lg"
-            value="Clear"
+            value="মুছে ফেলুন"
             disabled={pending}
           />
         </div>

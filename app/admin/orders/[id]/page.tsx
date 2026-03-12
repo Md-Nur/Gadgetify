@@ -56,6 +56,7 @@ const OrderDetails = ({ params }: { params: Promise<{ id: string }> }) => {
             }
         } catch (err) {
             console.error("Failed to fetch order details:", err);
+            toast.error("অর্ডারের বিস্তারিত আনতে সমস্যা হয়েছে");
         } finally {
             setLoading(false);
         }
@@ -75,20 +76,20 @@ const OrderDetails = ({ params }: { params: Promise<{ id: string }> }) => {
             const result = await response.json();
 
             if (result.success) {
-                toast.success("Order status updated successfully");
+                toast.success("অর্ডারের অবস্থা সফলভাবে আপডেট হয়েছে");
                 setOrder((prev: Order | null) => prev ? { ...prev, status: newStatus } : null);
             } else {
-                toast.error(result.message || "Failed to update status");
+                toast.error(result.message || "অবস্থা আপডেট করতে ব্যর্থ হয়েছে");
             }
         } catch (err) {
-            toast.error("An error occurred while updating status");
+            toast.error("অবস্থা আপডেট করার সময় একটি ভুল হয়েছে");
         } finally {
             setUpdating(false);
         }
     };
 
     const handleSendToSteadfast = async () => {
-        if (!confirm("Are you sure you want to send this order to Steadfast Courier?")) return;
+        if (!confirm("আপনি কি নিশ্চিত যে আপনি এই অর্ডারটি Steadfast Courier-এ পাঠাতে চান?")) return;
 
         setSendingToSteadfast(true);
         try {
@@ -99,17 +100,13 @@ const OrderDetails = ({ params }: { params: Promise<{ id: string }> }) => {
             const result = await response.json();
 
             if (result.success) {
-                toast.success("Order successfully sent to Steadfast!");
-                // Refresh order details to show updated status
+                toast.success("অর্ডারটি সফলভাবে Steadfast-এ পাঠানো হয়েছে!");
                 fetchOrderDetails();
             } else {
-                toast.error(result.message || "Failed to send to Steadfast");
-                if (result.errors) {
-                    console.error("Steadfast validation errors:", result.errors);
-                }
+                toast.error(result.message || "Steadfast-এ পাঠাতে ব্যর্থ হয়েছে");
             }
         } catch (err) {
-            toast.error("An error occurred while connecting to Steadfast");
+            toast.error("Steadfast-এর সাথে সংযোগ করার সময় একটি ভুল হয়েছে");
         } finally {
             setSendingToSteadfast(false);
         }
@@ -131,99 +128,116 @@ const OrderDetails = ({ params }: { params: Promise<{ id: string }> }) => {
         } else {
             try {
                 await navigator.clipboard.writeText(window.location.href);
-                toast.success("Link copied to clipboard!");
+                toast.success("লিঙ্কটি ক্লিপবোর্ডে কপি করা হয়েছে!");
             } catch (err) {
-                toast.error("Failed to copy link");
+                toast.error("লিঙ্ক কপি করতে ব্যর্থ হয়েছে");
             }
         }
     };
 
     if (loading) {
         return (
-            <div className="flex justify-center items-center min-h-screen">
-                <span className="loading loading-spinner loading-lg"></span>
+            <div className="flex justify-center items-center min-h-[60vh]">
+                <span className="loading loading-spinner loading-lg text-primary"></span>
             </div>
         );
     }
 
     if (!order) {
         return (
-            <div className="max-w-4xl mx-auto py-12 px-4 text-center">
-                <h1 className="text-2xl font-bold mb-4">Order Not Found</h1>
+            <div className="max-w-4xl mx-auto py-20 text-center space-y-4">
+                <h1 className="text-3xl font-bold">অর্ডার খুঁজে পাওয়া যায়নি</h1>
                 <Link href="/admin/orders" className="btn btn-primary">
-                    Back to Orders
+                    অর্ডারে ফিরে যান
                 </Link>
             </div>
         );
     }
 
-    const statuses = ["Pending", "Processing", "Shipped", "Delivered", "Cancelled"];
+    const statuses = [
+        { value: "Pending", label: "অপেক্ষমান" },
+        { value: "Processing", label: "প্রক্রিয়াধীন" },
+        { value: "Shipped", label: "পাঠানো হয়েছে" },
+        { value: "Delivered", label: "পৌঁছেছে" },
+        { value: "Cancelled", label: "বাতিল" },
+    ];
 
     return (
-        <div className="max-w-6xl mx-auto py-12 px-4">
-            <div className="flex justify-between items-center mb-8">
-                <h1 className="text-3xl font-bold">Order Details</h1>
-                <Link href="/admin/orders" className="btn btn-ghost">
-                    ← Back to Orders
+        <div className="max-w-6xl mx-auto">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
+                <div>
+                    <h1 className="text-3xl font-bold">অর্ডারের বিবরণ</h1>
+                    <p className="text-base-content/60 mt-1">অর্ডার আইডি: <span className="font-mono text-primary font-bold">#{order.id.slice(0, 8).toUpperCase()}</span></p>
+                </div>
+                <Link href="/admin/orders" className="btn btn-ghost border-base-300">
+                    ← অর্ডারে ফিরে যান
                 </Link>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 {/* Main Content */}
-                <div className="lg:col-span-2 space-y-6">
+                <div className="lg:col-span-2 space-y-8">
                     {/* Order Info */}
-                    <div className="bg-base-200 p-6 rounded-lg">
-                        <h2 className="text-xl font-semibold mb-4">Order Information</h2>
-                        <div className="grid grid-cols-2 gap-4">
+                    <div className="bg-base-200/50 p-6 rounded-3xl border border-base-300">
+                        <h2 className="text-xl font-bold mb-6 flex items-center gap-2">
+                            অর্ডারের তথ্য
+                        </h2>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                             <div>
-                                <p className="text-sm text-base-content/70">Order ID</p>
-                                <p className="font-mono font-medium">{order.id.slice(0, 8).toUpperCase()}</p>
+                                <p className="text-sm text-base-content/50 uppercase tracking-wider font-semibold">অর্ডারের তারিখ</p>
+                                <p className="font-medium mt-1">{new Date(order.createdAt).toLocaleString("bn-BD")}</p>
                             </div>
                             <div>
-                                <p className="text-sm text-base-content/70">Order Date</p>
-                                <p className="font-medium">{new Date(order.createdAt).toLocaleString()}</p>
+                                <p className="text-sm text-base-content/50 uppercase tracking-wider font-semibold">পেমেন্ট পদ্ধতি</p>
+                                <p className="font-medium mt-1 badge badge-outline">{order.paymentMethod === "COD" ? "ক্যাশ অন ডেলিভারি" : order.paymentMethod}</p>
                             </div>
                             <div>
-                                <p className="text-sm text-base-content/70">Payment Method</p>
-                                <p className="font-medium">{order.paymentMethod}</p>
-                            </div>
-                            <div>
-                                <p className="text-sm text-base-content/70">Delivery Area</p>
-                                <p className="font-medium">{order.isDhaka ? "Inside Dhaka" : "Outside Dhaka"}</p>
+                                <p className="text-sm text-base-content/50 uppercase tracking-wider font-semibold">ডেলিভারি এলাকা</p>
+                                <p className="font-medium mt-1">{order.isDhaka ? "ঢাকার ভেতরে" : "ঢাকার বাইরে"}</p>
                             </div>
                         </div>
                     </div>
 
                     {/* Customer Info */}
-                    <div className="bg-base-200 p-6 rounded-lg">
-                        <h2 className="text-xl font-semibold mb-4">Customer Information</h2>
-                        <div className="space-y-2">
-                            <p><span className="font-medium">Name:</span> {order.customerName}</p>
-                            <p><span className="font-medium">Phone:</span> <a href={`tel:${order.customerPhone}`} className="link link-primary">{order.customerPhone}</a></p>
-                            <p><span className="font-medium">Address:</span> {order.customerAddress}</p>
+                    <div className="bg-base-200/50 p-6 rounded-3xl border border-base-300">
+                        <h2 className="text-xl font-bold mb-6">গ্রাহকের তথ্য</h2>
+                        <div className="space-y-4">
+                            <div className="flex items-start gap-3">
+                                <span className="font-bold w-20 text-base-content/60">নাম:</span>
+                                <span>{order.customerName}</span>
+                            </div>
+                            <div className="flex items-start gap-3">
+                                <span className="font-bold w-20 text-base-content/60">ফোন:</span>
+                                <a href={`tel:${order.customerPhone}`} className="text-primary font-bold hover:underline">{order.customerPhone}</a>
+                            </div>
+                            <div className="flex items-start gap-3">
+                                <span className="font-bold w-20 text-base-content/60">ঠিকানা:</span>
+                                <span className="leading-relaxed">{order.customerAddress}</span>
+                            </div>
                         </div>
                     </div>
 
                     {/* Ordered Items */}
-                    <div className="bg-base-200 p-6 rounded-lg">
-                        <h2 className="text-xl font-semibold mb-4">Ordered Items</h2>
+                    <div className="bg-base-200/50 p-6 rounded-3xl border border-base-300">
+                        <h2 className="text-xl font-bold mb-6">অর্ডার করা পণ্যসমূহ</h2>
                         <div className="space-y-4">
                             {order.orderItems.map((item) => (
-                                <div key={item.id} className="flex gap-4 items-center p-4 bg-base-100 rounded-lg">
+                                <div key={item.id} className="flex gap-4 items-center p-4 bg-base-100 rounded-2xl border border-base-300 shadow-sm">
                                     {item.product.images[0] && (
-                                        <Image
-                                            src={item.product.images[0][1] === "/" ? item.product.images[0].slice(8) : item.product.images[0]}
-                                            alt={item.product.name}
-                                            width={80}
-                                            height={80}
-                                            className="rounded-lg object-cover"
-                                        />
+                                        <div className="relative w-20 h-20 rounded-xl overflow-hidden border border-base-200 flex-shrink-0">
+                                            <Image
+                                                src={item.product.images[0][1] === "/" ? item.product.images[0].slice(8) : item.product.images[0]}
+                                                alt={item.product.name}
+                                                fill
+                                                className="object-cover"
+                                            />
+                                        </div>
                                     )}
-                                    <div className="flex-1">
-                                        <h3 className="font-medium">{item.product.name}</h3>
-                                        <p className="text-sm text-base-content/70">৳{item.product.price} × {item.quantity}</p>
+                                    <div className="flex-1 min-w-0">
+                                        <h3 className="font-bold text-lg truncate">{item.product.name}</h3>
+                                        <p className="text-primary font-semibold">৳{item.product.price.toLocaleString()} × {item.quantity}</p>
                                     </div>
-                                    <p className="font-semibold text-lg">৳{item.product.price * item.quantity}</p>
+                                    <p className="font-black text-xl text-primary whitespace-nowrap">৳{(item.product.price * item.quantity).toLocaleString()}</p>
                                 </div>
                             ))}
                         </div>
@@ -231,67 +245,72 @@ const OrderDetails = ({ params }: { params: Promise<{ id: string }> }) => {
                 </div>
 
                 {/* Sidebar */}
-                <div className="space-y-6">
+                <div className="space-y-8">
                     {/* Order Status */}
-                    <div className="bg-base-200 p-6 rounded-lg">
-                        <h2 className="text-xl font-semibold mb-4">Order Status</h2>
+                    <div className="bg-base-200/50 p-6 rounded-3xl border border-base-300">
+                        <h2 className="text-xl font-bold mb-6">অর্ডারের অবস্থা</h2>
                         <select
-                            className="select select-bordered w-full mb-4"
+                            className="select select-bordered select-lg w-full mb-4 bg-base-100 rounded-2xl"
                             value={order.status}
                             onChange={(e) => updateOrderStatus(e.target.value)}
                             disabled={updating}
                         >
                             {statuses.map((status) => (
-                                <option key={status} value={status}>
-                                    {status}
+                                <option key={status.value} value={status.value}>
+                                    {status.label}
                                 </option>
                             ))}
                         </select>
-                        {updating && <p className="text-sm text-base-content/70">Updating...</p>}
+                        {updating && (
+                            <div className="flex items-center gap-2 text-sm text-primary font-medium">
+                                <span className="loading loading-spinner loading-xs"></span>
+                                আপডেট হচ্ছে...
+                            </div>
+                        )}
                     </div>
 
                     {/* Order Summary */}
-                    <div className="bg-base-200 p-6 rounded-lg">
-                        <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
-                        <div className="space-y-2">
-                            <div className="flex justify-between">
-                                <span>Subtotal:</span>
-                                <span>৳{order.totalAmount - order.deliveryCharge}</span>
+                    <div className="bg-primary text-primary-content p-6 rounded-3xl shadow-xl shadow-primary/20">
+                        <h2 className="text-xl font-bold mb-6">অর্ডারের সারাংশ</h2>
+                        <div className="space-y-4">
+                            <div className="flex justify-between font-medium opacity-90">
+                                <span>পণ্যের দাম:</span>
+                                <span>৳{(order.totalAmount - order.deliveryCharge).toLocaleString()}</span>
                             </div>
-                            <div className="flex justify-between">
-                                <span>Delivery:</span>
-                                <span>৳{order.deliveryCharge}</span>
+                            <div className="flex justify-between font-medium opacity-90">
+                                <span>ডেলিভারি চার্জ:</span>
+                                <span>৳{order.deliveryCharge.toLocaleString()}</span>
                             </div>
-                            <div className="divider my-2"></div>
-                            <div className="flex justify-between text-xl font-bold">
-                                <span>Total:</span>
-                                <span className="text-primary">৳{order.totalAmount}</span>
+                            <div className="border-t border-primary-content/20 my-4"></div>
+                            <div className="flex justify-between text-2xl font-black">
+                                <span>মোট:</span>
+                                <span>৳{order.totalAmount.toLocaleString()}</span>
                             </div>
                         </div>
                     </div>
 
                     {/* Actions */}
-                    <div className="bg-base-200 p-6 rounded-lg">
-                        <h2 className="text-xl font-semibold mb-4">Actions</h2>
+                    <div className="bg-base-200/50 p-6 rounded-3xl border border-base-300 space-y-4">
+                        <h2 className="text-xl font-bold mb-2">অ্যাকশন</h2>
                         <button
-                            className="btn btn-outline w-full"
+                            className="btn btn-outline border-base-300 w-full rounded-2xl h-14"
                             onClick={() => window.print()}
                         >
-                            Print Invoice
+                            ইনভয়েস প্রিন্ট করুন
                         </button>
                         <button
-                            className="btn btn-primary w-full mt-3"
+                            className="btn btn-primary w-full rounded-2xl h-14"
                             onClick={handleShare}
                         >
-                            Share Invoice
+                            ইনভয়েস শেয়ার করুন
                         </button>
-                        <div className="divider opacity-50">Courier</div>
+                        <div className="divider opacity-50 font-bold text-xs uppercase tracking-widest text-base-content/50">কুরিয়ার</div>
                         <button
-                            className={`btn btn-secondary w-full ${sendingToSteadfast ? 'loading' : ''}`}
+                            className={`btn btn-secondary w-full rounded-2xl h-14 ${sendingToSteadfast ? 'loading' : ''}`}
                             onClick={handleSendToSteadfast}
                             disabled={sendingToSteadfast || order.status === "Delivered" || order.status === "Cancelled"}
                         >
-                            {sendingToSteadfast ? 'Sending...' : 'Send to Steadfast'}
+                            {sendingToSteadfast ? 'পাঠানো হচ্ছে...' : 'Steadfast-এ পাঠান'}
                         </button>
                     </div>
                 </div>

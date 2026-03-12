@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
   output   = "../generated/prisma"
@@ -13,7 +7,6 @@ datasource db {
   provider = "postgresql"
 }
 
-// User model
 model User {
   id        String   @id @default(uuid())
   name      String
@@ -29,7 +22,6 @@ model User {
   orders    Order[]
 }
 
-// Product model
 model Product {
   id            String      @id @default(uuid())
   name          String
@@ -43,12 +35,11 @@ model Product {
   stockQuantity Int         @default(0)
   rating        Float?
   numReviews    Int?
-  orderItems    OrderItem[]
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
+  orderItems    OrderItem[]
 }
 
-// Order model
 model Order {
   id              String      @id @default(uuid())
   userId          String?
@@ -58,22 +49,21 @@ model Order {
   isDhaka         Boolean     @default(false)
   deliveryCharge  Int         @default(130)
   totalAmount     Float
-  status          String      @default("Pending") // Pending, Processing, Shipped, Delivered, Cancelled
-  paymentMethod   String      @default("COD") // Cash on Delivery
-  user            User?       @relation(fields: [userId], references: [id])
-  orderItems      OrderItem[]
+  status          String      @default("Pending")
+  paymentMethod   String      @default("COD")
   createdAt       DateTime    @default(now())
   updatedAt       DateTime    @updatedAt
+  user            User?       @relation(fields: [userId], references: [id])
+  orderItems      OrderItem[]
 }
 
-// OrderItem model
 model OrderItem {
   id        String   @id @default(uuid())
   quantity  Int
   productId String
-  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
   orderId   String
-  order     Order    @relation(fields: orderId, references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  order     Order    @relation(fields: [orderId], references: [id])
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
 }

@@ -1,6 +1,7 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import jwt from "jsonwebtoken";
+import AdminSidebar from "./components/AdminSidebar";
 
 interface DecodedToken {
     id: string;
@@ -35,5 +36,14 @@ export default async function AdminLayout({
         redirect("/user/login");
     }
 
-    return <>{children}</>;
+    return (
+        <div className="min-h-screen bg-base-100 flex flex-col lg:flex-row">
+            <AdminSidebar />
+            <main className="flex-1 lg:ml-64 min-h-screen">
+                <div className="p-4 lg:p-8 pt-16 lg:pt-8">
+                    {children}
+                </div>
+            </main>
+        </div>
+    );
 }
