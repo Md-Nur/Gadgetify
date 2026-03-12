@@ -37,6 +37,7 @@ const OrderDetails = ({ params }: { params: Promise<{ id: string }> }) => {
     const [order, setOrder] = useState<Order | null>(null);
     const [loading, setLoading] = useState(true);
     const [updating, setUpdating] = useState(false);
+    const [sendingToSteadfast, setSendingToSteadfast] = useState(false);
 
     useEffect(() => {
         fetchOrderDetails();
@@ -75,7 +76,7 @@ const OrderDetails = ({ params }: { params: Promise<{ id: string }> }) => {
 
             if (result.success) {
                 toast.success("Order status updated successfully");
-                setOrder((prev) => prev ? { ...prev, status: newStatus } : null);
+                setOrder((prev: Order | null) => prev ? { ...prev, status: newStatus } : null);
             } else {
                 toast.error(result.message || "Failed to update status");
             }
@@ -83,6 +84,34 @@ const OrderDetails = ({ params }: { params: Promise<{ id: string }> }) => {
             toast.error("An error occurred while updating status");
         } finally {
             setUpdating(false);
+        }
+    };
+
+    const handleSendToSteadfast = async () => {
+        if (!confirm("Are you sure you want to send this order to Steadfast Courier?")) return;
+
+        setSendingToSteadfast(true);
+        try {
+            const response = await fetch(`/api/admin/orders/${id}/steadfast`, {
+                method: "POST",
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                toast.success("Order successfully sent to Steadfast!");
+                // Refresh order details to show updated status
+                fetchOrderDetails();
+            } else {
+                toast.error(result.message || "Failed to send to Steadfast");
+                if (result.errors) {
+                    console.error("Steadfast validation errors:", result.errors);
+                }
+            }
+        } catch (err) {
+            toast.error("An error occurred while connecting to Steadfast");
+        } finally {
+            setSendingToSteadfast(false);
         }
     };
 
@@ -255,6 +284,14 @@ const OrderDetails = ({ params }: { params: Promise<{ id: string }> }) => {
                             onClick={handleShare}
                         >
                             Share Invoice
+                        </button>
+                        <div className="divider opacity-50">Courier</div>
+                        <button
+                            className={`btn btn-secondary w-full ${sendingToSteadfast ? 'loading' : ''}`}
+                            onClick={handleSendToSteadfast}
+                            disabled={sendingToSteadfast || order.status === "Delivered" || order.status === "Cancelled"}
+                        >
+                            {sendingToSteadfast ? 'Sending...' : 'Send to Steadfast'}
                         </button>
                     </div>
                 </div>
